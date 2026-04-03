@@ -4,3 +4,6 @@ caishi-mobile-new.png
 app._old.js
 index._old.html
 styles._old.css
+*.new
+app.check.js
+caishi-home-check.png

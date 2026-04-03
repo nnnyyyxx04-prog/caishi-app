@@ -1,79 +1,92 @@
-const STORAGE_KEY = "caishi-web-state-v2";
-const LEGACY_KEYS = ["caishi-web-state-v1"];
-const DAY_MINUTES = 24 * 60;
+const STORAGE_KEY = "caishi-web-state-v3";
+const LEGACY_KEYS = ["caishi-web-state-v2", "caishi-web-state-v1"];
 
 const THEMES = [
   {
-    id: "morandi-mist",
-    name: "晨雾莫兰迪",
-    mood: "低饱和、纸感、很安静",
-    background: ["#f3ece4", "#e6d9cc"],
-    paper: "rgba(255, 250, 245, 0.9)",
-    paperStrong: "rgba(255, 252, 248, 0.96)",
-    ink: "#2f2723",
-    muted: "#7f6f66",
-    accent: "#7697a8",
-    accentStrong: "#5d7b89",
-    danger: "#c46f73",
-    neutralSlice: "#dfd7cf",
-    palette: ["#8FA8B4", "#C7B8A3", "#D9A6A3", "#B9C49A", "#A18F88"]
+    id: "powder-blue",
+    name: "奶油蓝晨",
+    mood: "像参考图那种轻软蓝白调",
+    background: ["#f6f1eb", "#efe8df"],
+    surface: "rgba(255, 251, 246, 0.92)",
+    surfaceStrong: "rgba(255, 253, 250, 0.98)",
+    ink: "#263c79",
+    inkSoft: "#6e7996",
+    accent: "#3b82ff",
+    accentStrong: "#2d64d9",
+    warning: "#ffd766",
+    warningStrong: "#ffbb38",
+    orange: "#ff9642",
+    orangeStrong: "#ff7a2b",
+    danger: "#f4795b",
+    success: "#65c28e",
+    palette: ["#AFC7FF", "#FFD978", "#F6B9A9", "#8BC2A2", "#7FA3FF"]
   },
   {
-    id: "morandi-ceramic",
-    name: "陶土莫兰迪",
-    mood: "偏暖、奶棕、手账感",
-    background: ["#f4ece5", "#d9c9bd"],
-    paper: "rgba(255, 249, 244, 0.9)",
-    paperStrong: "rgba(255, 252, 248, 0.96)",
-    ink: "#342924",
-    muted: "#807168",
-    accent: "#9a8570",
-    accentStrong: "#7e6a57",
-    danger: "#bf7073",
-    neutralSlice: "#ddd2c7",
-    palette: ["#A89B8C", "#C4B7A6", "#8E8274", "#BCB6AE", "#D8C5B1"]
+    id: "morandi-paper",
+    name: "雾纸莫兰迪",
+    mood: "低饱和、软纸感、适合长时间看",
+    background: ["#f2ebe4", "#e7ddd2"],
+    surface: "rgba(255, 250, 245, 0.92)",
+    surfaceStrong: "rgba(255, 252, 248, 0.98)",
+    ink: "#384565",
+    inkSoft: "#7d7d90",
+    accent: "#6f96c6",
+    accentStrong: "#547aa9",
+    warning: "#e8c97d",
+    warningStrong: "#cda64d",
+    orange: "#d88f6a",
+    orangeStrong: "#bf7450",
+    danger: "#c7726c",
+    success: "#7da489",
+    palette: ["#B7C9D9", "#E2B7A0", "#A4A37A", "#D8CFC4", "#8E9CAF"]
   },
   {
     id: "adventure-candy",
     name: "探险糖果",
-    mood: "更轻快，但做过降饱和",
-    background: ["#f4efe7", "#e4eef4"],
-    paper: "rgba(255, 252, 247, 0.92)",
-    paperStrong: "rgba(255, 255, 252, 0.97)",
-    ink: "#2c2523",
-    muted: "#776c65",
-    accent: "#6f94b4",
-    accentStrong: "#557b9b",
-    danger: "#c96e9e",
-    neutralSlice: "#ddd7cf",
-    palette: ["#5EA6BE", "#F0B95B", "#7BB49F", "#E88CBD", "#B79DD9"]
+    mood: "参考探险活宝，但降了一点饱和",
+    background: ["#f4efe7", "#e4ecf4"],
+    surface: "rgba(255, 252, 247, 0.92)",
+    surfaceStrong: "rgba(255, 255, 252, 0.98)",
+    ink: "#29416b",
+    inkSoft: "#6f7b93",
+    accent: "#4f8de6",
+    accentStrong: "#356dbf",
+    warning: "#ffd56c",
+    warningStrong: "#f5b233",
+    orange: "#ff9b57",
+    orangeStrong: "#f17d36",
+    danger: "#e67782",
+    success: "#70bf9d",
+    palette: ["#7FB4FF", "#FFD36E", "#8CC5B0", "#F1A8C3", "#AFA0F5"]
   },
   {
-    id: "sunset-adventure",
-    name: "落日冒险",
-    mood: "更有故事感，像手绘地图",
-    background: ["#f2ebdf", "#f0dcc6"],
-    paper: "rgba(255, 250, 242, 0.9)",
-    paperStrong: "rgba(255, 252, 247, 0.97)",
-    ink: "#342722",
-    muted: "#7e6e63",
-    accent: "#8e7e68",
-    accentStrong: "#6f5f4f",
-    danger: "#a7665d",
-    neutralSlice: "#ddd3c8",
-    palette: ["#4D7430", "#AB9D8B", "#FF873D", "#9E6657", "#8CBA6C"]
+    id: "sunset-room",
+    name: "落日房间",
+    mood: "更暖一点，像傍晚写字台",
+    background: ["#f5eee6", "#ecdacb"],
+    surface: "rgba(255, 250, 244, 0.92)",
+    surfaceStrong: "rgba(255, 252, 248, 0.98)",
+    ink: "#433c61",
+    inkSoft: "#7d7283",
+    accent: "#7a8fd9",
+    accentStrong: "#5b70b8",
+    warning: "#f4ce75",
+    warningStrong: "#dcad43",
+    orange: "#ec9864",
+    orangeStrong: "#d8733d",
+    danger: "#d77e73",
+    success: "#8fb48a",
+    palette: ["#B8C5FF", "#F4CF7E", "#E7A287", "#99B594", "#B6A3D8"]
   }
 ];
 
-const DEFAULT_TASKS = [
+const DEFAULT_TEMPLATES = [
   {
     id: "task_math_practice",
     folder: "学习",
     category: "数学",
     action: "做题",
-    tags: ["真题", "函数"],
-    color: "#8FA8B4",
-    repeat: "weekdays",
+    color: "#7FA3FF",
     createdAt: "2026-04-02T09:00:00"
   },
   {
@@ -81,114 +94,100 @@ const DEFAULT_TASKS = [
     folder: "学习",
     category: "数学",
     action: "复习",
-    tags: ["错题", "笔记"],
-    color: "#C7B8A3",
-    repeat: "weekly",
-    createdAt: "2026-04-02T09:01:00"
+    color: "#AFC7FF",
+    createdAt: "2026-04-02T09:05:00"
   },
   {
-    id: "task_chinese_reading",
+    id: "task_chinese_read",
     folder: "学习",
     category: "语文",
     action: "阅读",
-    tags: ["积累"],
-    color: "#B9C49A",
-    repeat: "daily",
-    createdAt: "2026-04-02T09:02:00"
+    color: "#FFD978",
+    createdAt: "2026-04-02T09:10:00"
   },
   {
     id: "task_life_bath",
     folder: "生活",
     category: "起居",
     action: "洗澡",
-    tags: ["放松"],
-    color: "#D9A6A3",
-    repeat: "daily",
-    createdAt: "2026-04-02T09:03:00"
+    color: "#F6B9A9",
+    createdAt: "2026-04-02T09:15:00"
   }
 ];
 
 const state = loadState();
 const ui = {
-  activeView: "today",
-  chartMode: "actual",
-  searchMode: "plan",
+  activeView: "home",
   statsPreset: "week",
   statsStart: "",
-  statsEnd: ""
+  statsEnd: "",
+  categoryTarget: "create",
+  categoryStep: "folder",
+  categoryFolder: "",
+  categoryCategory: "",
+  returnSheetId: "create-sheet"
 };
 
 const refs = {
-  appShell: document.querySelector("#app-shell"),
-  activeRibbon: document.querySelector("#active-ribbon"),
-  activeRibbonDot: document.querySelector("#active-ribbon-dot"),
-  activeRibbonMeta: document.querySelector("#active-ribbon-meta"),
-  activeRibbonTask: document.querySelector("#active-ribbon-task"),
-  activeRibbonDetail: document.querySelector("#active-ribbon-detail"),
-  setTargetButton: document.querySelector("#set-target-button"),
-  endSessionButton: document.querySelector("#end-session-button"),
   todayLabel: document.querySelector("#today-label"),
-  themeSeal: document.querySelector("#theme-seal"),
-  taskSearch: document.querySelector("#task-search"),
-  searchSuggestions: document.querySelector("#search-suggestions"),
-  openTaskPickerButton: document.querySelector("#open-task-picker-button"),
-  todayPlanList: document.querySelector("#today-plan-list"),
-  todayTotal: document.querySelector("#today-total"),
-  dayPie: document.querySelector("#day-pie"),
-  pieCoreLabel: document.querySelector("#pie-core-label"),
-  pieCoreTotal: document.querySelector("#pie-core-total"),
-  todayLegend: document.querySelector("#today-legend"),
-  todayTimeline: document.querySelector("#today-timeline"),
+  focusTimer: document.querySelector("#focus-timer"),
+  nextTrack: document.querySelector("#next-track"),
+  nextDots: document.querySelector("#next-dots"),
+  overdueGroup: document.querySelector("#overdue-group"),
+  overdueList: document.querySelector("#overdue-list"),
+  todayList: document.querySelector("#today-list"),
+  flexibleList: document.querySelector("#flexible-list"),
+  completedCount: document.querySelector("#completed-count"),
+  completedList: document.querySelector("#completed-list"),
   taskTree: document.querySelector("#task-tree"),
+  statsSummary: document.querySelector("#stats-summary"),
+  statsBreakdown: document.querySelector("#stats-breakdown"),
+  rangeButtons: document.querySelectorAll("[data-range]"),
+  statsStartDate: document.querySelector("#stats-start-date"),
+  statsEndDate: document.querySelector("#stats-end-date"),
   themeGrid: document.querySelector("#theme-grid"),
   paletteGrid: document.querySelector("#palette-grid"),
   customPaletteInput: document.querySelector("#custom-palette-input"),
   customPalettePreview: document.querySelector("#custom-palette-preview"),
   saveCustomPaletteButton: document.querySelector("#save-custom-palette-button"),
-  views: document.querySelectorAll(".view"),
   navItems: document.querySelectorAll(".nav-item"),
-  chartModeButtons: document.querySelectorAll("[data-chart-mode]"),
-  taskModal: document.querySelector("#task-modal"),
-  taskModalKicker: document.querySelector("#task-modal-kicker"),
-  taskModalTitle: document.querySelector("#task-modal-title"),
-  taskForm: document.querySelector("#task-form"),
-  taskColorPicker: document.querySelector("#task-color-picker"),
-  entryModal: document.querySelector("#entry-modal"),
-  entryModalKicker: document.querySelector("#entry-modal-kicker"),
-  entryModalTitle: document.querySelector("#entry-modal-title"),
-  entryForm: document.querySelector("#entry-form"),
-  entryTaskBanner: document.querySelector("#entry-task-banner"),
-  entryCompleteRow: document.querySelector("#entry-complete-row"),
-  newTaskButton: document.querySelector("#new-task-button"),
-  rangePresets: document.querySelectorAll("[data-range]"),
-  statsStartDate: document.querySelector("#stats-start-date"),
-  statsEndDate: document.querySelector("#stats-end-date"),
-  statsFolderFilter: document.querySelector("#stats-folder-filter"),
-  statsCategoryFilter: document.querySelector("#stats-category-filter"),
-  statsTaskFilter: document.querySelector("#stats-task-filter"),
-  statsTotalDuration: document.querySelector("#stats-total-duration"),
-  statsPlanDuration: document.querySelector("#stats-plan-duration"),
-  statsCompletionRate: document.querySelector("#stats-completion-rate"),
-  statsActiveDays: document.querySelector("#stats-active-days"),
-  statsBreakdown: document.querySelector("#stats-breakdown"),
-  statsBarChart: document.querySelector("#stats-bar-chart"),
-  exportDataButton: document.querySelector("#export-data-button"),
-  clearTodayButton: document.querySelector("#clear-today-button")
+  views: document.querySelectorAll(".view"),
+  taskNameSuggestions: document.querySelector("#task-name-suggestions"),
+  openActionSheet: document.querySelector("#open-action-sheet"),
+  openTemplateSheet: document.querySelector("#open-template-sheet"),
+  createForm: document.querySelector("#create-form"),
+  quickForm: document.querySelector("#quick-form"),
+  logForm: document.querySelector("#log-form"),
+  startForm: document.querySelector("#start-form"),
+  templateForm: document.querySelector("#template-form"),
+  createCategoryValue: document.querySelector("#create-category-value"),
+  logCategoryValue: document.querySelector("#log-category-value"),
+  startCategoryValue: document.querySelector("#start-category-value"),
+  createCategoryButton: document.querySelector("#create-category-button"),
+  logCategoryButton: document.querySelector("#log-category-button"),
+  startCategoryButton: document.querySelector("#start-category-button"),
+  categoryPath: document.querySelector("#category-path"),
+  categoryList: document.querySelector("#category-list"),
+  categoryBackButton: document.querySelector("#category-back-button"),
+  categoryClearButton: document.querySelector("#category-clear-button"),
+  templateColorPicker: document.querySelector("#template-color-picker"),
+  templateSheetKicker: document.querySelector("#template-sheet-kicker"),
+  templateSheetTitle: document.querySelector("#template-sheet-title")
 };
 
 let nowTick = Date.now();
 
-ensureStarterPlans();
-bindEvents();
+hydrateState();
+ensureStarterData();
 syncStatsDatesFromPreset(ui.statsPreset);
+bindEvents();
 renderAll();
+
 window.setInterval(() => {
   nowTick = Date.now();
-  if (state.activeSession) {
-    renderActiveRibbon();
-    if (ui.activeView === "today" && ui.chartMode === "actual") {
-      renderTodayChart();
-    }
+  renderFocusTimer();
+  if (ui.activeView === "home") {
+    renderHome();
   }
 }, 1000);
 
@@ -197,45 +196,40 @@ function bindEvents() {
     button.addEventListener("click", () => switchView(button.dataset.viewTarget));
   });
 
-  refs.chartModeButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      ui.chartMode = button.dataset.chartMode;
-      renderTodayChart();
-    });
+  refs.openActionSheet.addEventListener("click", () => openSheet("action-sheet"));
+  refs.openTemplateSheet.addEventListener("click", () => openTemplateForm());
+
+  document.querySelectorAll("[data-close-sheet]").forEach((button) => {
+    button.addEventListener("click", () => closeSheet(button.dataset.closeSheet));
   });
 
-  refs.taskSearch.addEventListener("input", renderSearchSuggestions);
-  refs.openTaskPickerButton.addEventListener("click", () => {
-    ui.searchMode = "manual";
-    refs.taskSearch.focus();
-    renderSearchSuggestions();
+  document.querySelectorAll("[data-open-sheet]").forEach((button) => {
+    button.addEventListener("click", () => handleOpenSheet(button.dataset.openSheet));
   });
 
-  refs.searchSuggestions.addEventListener("click", handleSearchSuggestionActions);
-  refs.todayPlanList.addEventListener("click", handleTodayPlanActions);
+  refs.createCategoryButton.addEventListener("click", () => openCategorySheet("create", "create-sheet"));
+  refs.logCategoryButton.addEventListener("click", () => openCategorySheet("log", "log-sheet"));
+  refs.startCategoryButton.addEventListener("click", () => openCategorySheet("start", "start-sheet"));
+
+  refs.categoryBackButton.addEventListener("click", handleCategoryBack);
+  refs.categoryClearButton.addEventListener("click", clearCategorySelection);
+  refs.categoryList.addEventListener("click", handleCategoryListClick);
+
+  refs.createForm.addEventListener("submit", handleCreateSubmit);
+  refs.quickForm.addEventListener("submit", handleQuickSubmit);
+  refs.logForm.addEventListener("submit", handleLogSubmit);
+  refs.startForm.addEventListener("submit", handleStartSubmit);
+  refs.templateForm.addEventListener("submit", handleTemplateSubmit);
+  refs.templateColorPicker.addEventListener("click", handleTemplateColorClick);
+
+  refs.nextTrack.addEventListener("click", handleTodoAction);
+  refs.overdueList.addEventListener("click", handleTodoAction);
+  refs.todayList.addEventListener("click", handleTodoAction);
+  refs.flexibleList.addEventListener("click", handleTodoAction);
+  refs.focusTimer.addEventListener("click", handleFocusTimerActions);
   refs.taskTree.addEventListener("click", handleTaskTreeActions);
 
-  refs.newTaskButton.addEventListener("click", () => openTaskModal());
-  refs.taskForm.addEventListener("submit", handleTaskSubmit);
-  refs.taskColorPicker.addEventListener("click", handleColorPickerClick);
-
-  refs.entryForm.addEventListener("submit", handleEntrySubmit);
-  refs.setTargetButton.addEventListener("click", setActiveTargetTime);
-  refs.endSessionButton.addEventListener("click", endActiveSession);
-
-  document.querySelectorAll("[data-close-modal]").forEach((button) => {
-    button.addEventListener("click", () => closeModal(button.dataset.closeModal));
-  });
-
-  document.querySelectorAll(".modal").forEach((modal) => {
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) {
-        closeModal(modal.id);
-      }
-    });
-  });
-
-  refs.rangePresets.forEach((button) => {
+  refs.rangeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       ui.statsPreset = button.dataset.range;
       syncStatsDatesFromPreset(ui.statsPreset);
@@ -255,29 +249,17 @@ function bindEvents() {
     renderStats();
   });
 
-  refs.statsFolderFilter.addEventListener("change", () => {
-    populateStatsFilters();
-    renderStats();
-  });
-
-  refs.statsCategoryFilter.addEventListener("change", () => {
-    populateStatsTaskFilter();
-    renderStats();
-  });
-
-  refs.statsTaskFilter.addEventListener("change", renderStats);
-  refs.themeGrid.addEventListener("click", handleThemeGridClick);
-  refs.paletteGrid.addEventListener("click", handlePaletteGridClick);
+  refs.themeGrid.addEventListener("click", handleThemeClick);
+  refs.paletteGrid.addEventListener("click", handlePaletteClick);
   refs.saveCustomPaletteButton.addEventListener("click", saveCustomPalette);
-  refs.exportDataButton.addEventListener("click", exportData);
-  refs.clearTodayButton.addEventListener("click", clearTodayData);
 }
 
 function loadState() {
   const raw = readStoredState();
   const theme = THEMES[0];
-  const normalized = {
-    tasks: normalizeTasks(raw?.tasks),
+  const tasks = normalizeTasks(raw?.tasks);
+  return {
+    tasks: tasks.length ? tasks : structuredClone(DEFAULT_TEMPLATES),
     plans: normalizePlans(raw?.plans),
     entries: normalizeEntries(raw?.entries),
     activeSession: normalizeActiveSession(raw?.activeSession),
@@ -288,36 +270,6 @@ function loadState() {
       customPaletteName: raw?.preferences?.customPaletteName || "我的颜色组"
     }
   };
-  if (!normalized.tasks.length) {
-    normalized.tasks = structuredClone(DEFAULT_TASKS);
-  }
-  return normalized;
-}
-
-function ensureStarterPlans() {
-  if (state.plans.length || state.entries.length || !state.tasks.length) {
-    return;
-  }
-  const today = dateKey(new Date());
-  const templates = [
-    { taskId: state.tasks[0]?.id, startTime: "10:00", endTime: "12:00" },
-    { taskId: state.tasks[1]?.id, startTime: "14:00", endTime: "15:00" },
-    { taskId: state.tasks[2]?.id, startTime: "19:30", endTime: "20:10" },
-    { taskId: state.tasks[3]?.id, startTime: "21:10", endTime: "21:35" }
-  ].filter((item) => item.taskId);
-
-  templates.forEach((plan) => {
-    state.plans.push({
-      id: uid("plan"),
-      taskId: plan.taskId,
-      date: today,
-      startTime: plan.startTime,
-      endTime: plan.endTime,
-      completed: false
-    });
-  });
-
-  saveState();
 }
 
 function readStoredState() {
@@ -341,13 +293,11 @@ function normalizeTasks(tasks) {
     return [];
   }
   return tasks.map((task, index) => ({
-    id: task.id || `task_legacy_${index}`,
+    id: String(task.id || `task_${index}`),
     folder: String(task.folder || task.project || "未分类"),
     category: String(task.category || task.group || "未分类"),
-    action: String(task.action || task.title || "未命名任务"),
-    tags: Array.isArray(task.tags) ? task.tags.filter(Boolean).map(String) : [],
-    color: String(task.color || "#8FA8B4"),
-    repeat: String(task.repeat || "none"),
+    action: String(task.action || task.title || "未命名"),
+    color: String(task.color || "#AFC7FF"),
     createdAt: task.createdAt || new Date().toISOString()
   }));
 }
@@ -356,14 +306,23 @@ function normalizePlans(plans) {
   if (!Array.isArray(plans)) {
     return [];
   }
-  return plans.map((plan, index) => ({
-    id: plan.id || `plan_legacy_${index}`,
-    taskId: String(plan.taskId || ""),
-    date: String(plan.date || dateKey(new Date())),
-    startTime: String(plan.startTime || "09:00"),
-    endTime: String(plan.endTime || "10:00"),
-    completed: Boolean(plan.completed)
-  })).filter((plan) => plan.taskId);
+  return plans.map((plan, index) => {
+    const startTime = typeof plan.startTime === "string" ? plan.startTime : "";
+    const durationMinutes = parseMinutes(plan.durationMinutes);
+    const endTime = typeof plan.endTime === "string" ? plan.endTime : "";
+    const derivedDuration = durationMinutes || deriveDurationMinutes(startTime, endTime);
+    return {
+      id: String(plan.id || `plan_${index}`),
+      title: String(plan.title || plan.name || ""),
+      taskId: plan.taskId ? String(plan.taskId) : "",
+      date: String(plan.date || dateKey(new Date())),
+      startTime,
+      durationMinutes: derivedDuration,
+      important: Boolean(plan.important),
+      completed: Boolean(plan.completed),
+      createdAt: String(plan.createdAt || new Date().toISOString())
+    };
+  });
 }
 
 function normalizeEntries(entries) {
@@ -371,91 +330,461 @@ function normalizeEntries(entries) {
     return [];
   }
   return entries.map((entry, index) => ({
-    id: entry.id || `entry_legacy_${index}`,
-    taskId: String(entry.taskId || ""),
+    id: String(entry.id || `entry_${index}`),
+    title: String(entry.title || ""),
+    taskId: entry.taskId ? String(entry.taskId) : "",
+    planId: entry.planId ? String(entry.planId) : "",
     start: entry.start || new Date().toISOString(),
     end: entry.end || new Date().toISOString(),
-    source: entry.source || "manual"
-  })).filter((entry) => entry.taskId);
+    source: String(entry.source || "manual")
+  }));
 }
 
 function normalizeActiveSession(session) {
-  if (!session || !session.taskId || !session.start) {
+  if (!session) {
     return null;
   }
-  return {
-    taskId: String(session.taskId),
-    start: session.start,
-    targetEnd: session.targetEnd || null,
-    planId: session.planId || null
-  };
+  if (Array.isArray(session.segments) && session.segments.length) {
+    return {
+      title: String(session.title || ""),
+      taskId: session.taskId ? String(session.taskId) : "",
+      planId: session.planId ? String(session.planId) : "",
+      pausedAt: session.pausedAt || null,
+      segments: session.segments.map((segment) => ({
+        start: segment.start,
+        end: segment.end || null
+      }))
+    };
+  }
+  if (session.start) {
+    return {
+      title: String(session.title || ""),
+      taskId: session.taskId ? String(session.taskId) : "",
+      planId: session.planId ? String(session.planId) : "",
+      pausedAt: null,
+      segments: [{ start: session.start, end: null }]
+    };
+  }
+  return null;
+}
+
+function hydrateState() {
+  state.plans.forEach((plan) => {
+    if (!plan.title) {
+      plan.title = taskDisplayName(plan.taskId) || "未命名任务";
+    }
+  });
+
+  state.entries.forEach((entry) => {
+    if (!entry.title) {
+      entry.title = taskDisplayName(entry.taskId) || "未命名任务";
+    }
+  });
+
+  if (state.activeSession && !state.activeSession.title) {
+    state.activeSession.title = taskDisplayName(state.activeSession.taskId) || "进行中";
+  }
+}
+
+function ensureStarterData() {
+  if (state.plans.length || state.entries.length) {
+    return;
+  }
+
+  const today = dateKey(new Date());
+  const nowMinutes = currentMinutes();
+  const overdueTime = minutesToTime(clamp(roundToFive(nowMinutes - 90), 360, 1320));
+  const soonTime = minutesToTime(clamp(roundToFive(nowMinutes + 30), 360, 1320));
+  const laterTime = minutesToTime(clamp(roundToFive(nowMinutes + 120), 360, 1320));
+
+  state.plans.push(
+    createPlan({
+      title: "语文阅读",
+      taskId: state.tasks.find((task) => task.id === "task_chinese_read")?.id || "",
+      date: today,
+      startTime: overdueTime,
+      durationMinutes: 30,
+      important: false
+    }),
+    createPlan({
+      title: "数学做题",
+      taskId: state.tasks.find((task) => task.id === "task_math_practice")?.id || "",
+      date: today,
+      startTime: soonTime,
+      durationMinutes: 60,
+      important: false
+    }),
+    createPlan({
+      title: "数学复习",
+      taskId: state.tasks.find((task) => task.id === "task_math_review")?.id || "",
+      date: today,
+      startTime: laterTime,
+      durationMinutes: 45,
+      important: true
+    }),
+    createPlan({
+      title: "填写问卷",
+      taskId: "",
+      date: today,
+      startTime: "",
+      durationMinutes: 5,
+      important: true
+    })
+  );
+
+  saveState();
 }
 
 function saveState() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function getTheme(themeId = state.preferences.themeId) {
-  return THEMES.find((theme) => theme.id === themeId) || THEMES[0];
-}
-
-function getPaletteCards() {
-  const cards = THEMES.map((theme) => ({
-    id: theme.id,
-    name: theme.name,
-    colors: theme.palette,
-    note: theme.mood
-  }));
-  if (state.preferences.customPalette.length) {
-    cards.push({
-      id: "custom",
-      name: state.preferences.customPaletteName || "我的颜色组",
-      colors: state.preferences.customPalette,
-      note: "用户导入"
-    });
-  }
-  return cards;
-}
-
-function getTaskPaletteColors() {
-  if (state.preferences.paletteId === "custom" && state.preferences.customPalette.length) {
-    return state.preferences.customPalette;
-  }
-  const match = THEMES.find((theme) => theme.id === state.preferences.paletteId);
-  return (match || getTheme()).palette;
+function renderAll() {
+  applyTheme(getTheme());
+  renderTodayLabel();
+  renderSuggestionList();
+  renderFocusTimer();
+  renderHome();
+  renderTaskLibrary();
+  renderStats();
+  renderSettings();
+  switchView(ui.activeView, true);
 }
 
 function applyTheme(theme) {
   document.documentElement.style.setProperty("--bg", theme.background[0]);
   document.documentElement.style.setProperty("--bg-soft", theme.background[1]);
-  document.documentElement.style.setProperty("--paper", theme.paper);
-  document.documentElement.style.setProperty("--paper-strong", theme.paperStrong);
+  document.documentElement.style.setProperty("--surface", theme.surface);
+  document.documentElement.style.setProperty("--surface-strong", theme.surfaceStrong);
   document.documentElement.style.setProperty("--ink", theme.ink);
-  document.documentElement.style.setProperty("--muted", theme.muted);
+  document.documentElement.style.setProperty("--ink-soft", theme.inkSoft);
   document.documentElement.style.setProperty("--accent", theme.accent);
   document.documentElement.style.setProperty("--accent-strong", theme.accentStrong);
+  document.documentElement.style.setProperty("--warning", theme.warning);
+  document.documentElement.style.setProperty("--warning-strong", theme.warningStrong);
+  document.documentElement.style.setProperty("--orange", theme.orange);
+  document.documentElement.style.setProperty("--orange-strong", theme.orangeStrong);
   document.documentElement.style.setProperty("--danger", theme.danger);
-  document.documentElement.style.setProperty("--neutral-slice", theme.neutralSlice);
-  refs.themeSeal.textContent = theme.name;
+  document.documentElement.style.setProperty("--success", theme.success);
 }
 
-function renderAll() {
-  applyTheme(getTheme());
-  renderTodayHeader();
-  switchView(ui.activeView, true);
-  populateStatsFilters();
-  renderSearchSuggestions();
-  renderTodayPlans();
-  renderTodayChart();
-  renderActiveRibbon();
-  renderTaskTree();
-  renderStats();
-  renderSettings();
-}
-
-function renderTodayHeader() {
+function renderTodayLabel() {
   const now = new Date();
   refs.todayLabel.textContent = `${now.getMonth() + 1}月${now.getDate()}日 ${weekdayLabel(now)}`;
+}
+
+function renderSuggestionList() {
+  const suggestions = uniqueValues([
+    ...state.plans.map((plan) => plan.title),
+    ...state.entries.map((entry) => entry.title),
+    ...state.tasks.map((task) => task.action)
+  ].filter(Boolean));
+
+  refs.taskNameSuggestions.innerHTML = suggestions.map((value) => (
+    `<option value="${escapeAttr(value)}"></option>`
+  )).join("");
+}
+
+function renderFocusTimer() {
+  const session = state.activeSession;
+  if (!session) {
+    refs.focusTimer.classList.add("idle");
+    refs.focusTimer.innerHTML = `
+      <div class="timer-row">
+        <div class="timer-copy">
+          <span>固定计时器</span>
+          <strong>还没有正在进行的任务</strong>
+        </div>
+        <div class="timer-actions">
+          <button class="timer-button" type="button" data-open-sheet="start-sheet">Start</button>
+        </div>
+      </div>
+      <div class="timer-progress" style="--progress:0.24"></div>
+    `;
+    return;
+  }
+
+  refs.focusTimer.classList.remove("idle");
+  const elapsedMs = sessionElapsedMs(session);
+  const plan = session.planId ? findPlan(session.planId) : null;
+  const linkedTask = session.taskId ? findTask(session.taskId) : null;
+  const plannedMinutes = planDurationMinutes(plan);
+  const progress = plannedMinutes ? clamp(elapsedMs / (plannedMinutes * 60 * 1000), 0, 1) : 0.38;
+  const status = isSessionPaused(session) ? "Paused" : "Now";
+  const secondary = linkedTask ? linkedTask.category : "临时任务";
+
+  refs.focusTimer.innerHTML = `
+    <div class="timer-row">
+      <div class="timer-copy">
+        <span>${status} · ${escapeHtml(secondary)}</span>
+        <strong>${escapeHtml(session.title)}</strong>
+      </div>
+      <div class="timer-clock">${formatDurationClock(elapsedMs)}</div>
+    </div>
+    <div class="timer-progress" style="--progress:${progress.toFixed(3)}"></div>
+    <div class="timer-row">
+      <div class="timer-copy">
+        <span>${plannedMinutes ? `目标 ${humanizeMinutes(plannedMinutes)}` : "没有预设时长"}</span>
+      </div>
+      <div class="timer-actions">
+        <button class="timer-button" type="button" data-pause-session="${isSessionPaused(session) ? "resume" : "pause"}">
+          ${isSessionPaused(session) ? "继续" : "暂停"}
+        </button>
+        <button class="stop-button" type="button" data-stop-session="true">结束</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderHome() {
+  const buckets = getTodayBuckets();
+  const nextItems = getNextItems();
+
+  refs.nextTrack.innerHTML = nextItems.length
+    ? nextItems.map(renderNextCard).join("")
+    : renderEmptyState("先点右下角的 +，把今天的任务排进去。");
+
+  refs.nextDots.innerHTML = nextItems.length
+    ? nextItems.map((_, index) => `<span class="${index === 0 ? "active" : ""}"></span>`).join("")
+    : "";
+
+  refs.overdueGroup.classList.toggle("hidden", !buckets.overdue.length);
+  refs.overdueList.innerHTML = renderTodoList(buckets.overdue, "overdue");
+  refs.todayList.innerHTML = renderTodoList(buckets.today, "today");
+  refs.flexibleList.innerHTML = renderTodoList(buckets.flexible, "flexible");
+
+  const completedItems = getCompletedItems();
+  refs.completedCount.textContent = String(completedItems.length);
+  refs.completedList.innerHTML = completedItems.length
+    ? completedItems.map(renderCompletedCard).join("")
+    : renderEmptyState("完成的任务会折叠收在这里。");
+}
+
+function renderTodoList(items, group) {
+  if (!items.length) {
+    if (group === "today") {
+      return renderEmptyState("今天还没有排上具体时间的任务。");
+    }
+    if (group === "flexible") {
+      return renderEmptyState("没有无时间任务，时间线会更清爽。");
+    }
+    return "";
+  }
+  return items.map((plan) => renderTodoRow(plan, group)).join("");
+}
+
+function renderNextCard(plan) {
+  const status = getPlanStatus(plan);
+  const task = plan.taskId ? findTask(plan.taskId) : null;
+  const timeLabel = plan.startTime || "Flexible";
+  const tag = shortTag(plan);
+  const extra = plan.important ? '<span class="status-chip">⭐ Important</span>' : "";
+  const actionLabel = isPlanRunning(plan) ? "继续看" : "Start";
+
+  return `
+    <article class="next-card status-${status}">
+      <div class="next-topline">
+        <span class="next-time">${escapeHtml(timeLabel)}</span>
+        ${extra}
+      </div>
+      <div>
+        <p class="next-title">${escapeHtml(plan.title)}</p>
+        <div class="todo-meta">
+          <span class="tag">${escapeHtml(tag)}</span>
+          ${task ? `<span class="tag">${escapeHtml(task.action)}</span>` : ""}
+        </div>
+      </div>
+      <div class="next-actions">
+        <button class="inline-button primary" type="button" data-start-plan="${plan.id}">${actionLabel}</button>
+        <button class="inline-button soft" type="button" data-complete-plan="${plan.id}">完成</button>
+      </div>
+    </article>
+  `;
+}
+
+function renderTodoRow(plan, group) {
+  const running = isPlanRunning(plan);
+  const timeLabel = group === "flexible" ? "Any time" : (plan.startTime || "Any time");
+  const tag = shortTag(plan);
+  const duration = planDurationMinutes(plan);
+  const statusLabel = group === "flexible"
+    ? (duration ? `${duration} min` : "插空做")
+    : (duration ? `${duration} min` : "未设时长");
+
+  return `
+    <article class="todo-row ${group === "overdue" ? "is-overdue" : ""} ${running ? "is-running" : ""}">
+      <div class="todo-main">
+        <span class="todo-time">${escapeHtml(timeLabel)}</span>
+        <div>
+          <p class="todo-title">${escapeHtml(plan.title)}</p>
+          <div class="todo-meta">
+            <span class="tag">${escapeHtml(tag)}</span>
+            ${plan.important ? '<span class="status-chip">⭐ Important</span>' : ""}
+          </div>
+        </div>
+      </div>
+      <div class="todo-trailing">
+        <span class="task-meta">${escapeHtml(statusLabel)}</span>
+        <div class="todo-actions">
+          <button class="inline-button ${group === "overdue" ? "warning" : "primary"}" type="button" data-start-plan="${plan.id}">
+            ${running ? "Running" : "Start"}
+          </button>
+          <button class="inline-button soft" type="button" data-complete-plan="${plan.id}">Done</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderCompletedCard(item) {
+  return `
+    <article class="completed-card">
+      <div class="todo-main">
+        <div>
+          <p class="todo-title">${escapeHtml(item.title)}</p>
+          <div class="todo-meta">
+            <span class="tag">${escapeHtml(item.tag)}</span>
+          </div>
+        </div>
+        <span class="task-meta">${escapeHtml(item.meta)}</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderTaskLibrary() {
+  const groups = groupTemplates();
+  refs.taskTree.innerHTML = groups.length
+    ? groups.map((group, index) => renderTemplateGroup(group, index)).join("")
+    : renderEmptyState("还没有模板，先新建一个。");
+}
+
+function renderTemplateGroup(group, groupIndex) {
+  return `
+    <details class="template-group" ${groupIndex === 0 ? "open" : ""}>
+      <summary>
+        <span>${escapeHtml(group.folder)}</span>
+        <span class="task-meta">${group.categories.length} 个二级分类</span>
+      </summary>
+      ${group.categories.map((category, categoryIndex) => `
+        <details class="template-category" ${categoryIndex === 0 ? "open" : ""}>
+          <summary>
+            <span>${escapeHtml(category.name)}</span>
+            <span class="task-meta">${category.tasks.length} 个三级分类</span>
+          </summary>
+          ${category.tasks.map((task) => `
+            <div class="template-row">
+              <div class="template-row-head">
+                <div class="breakdown-stack">
+                  <span class="breakdown-dot" style="--swatch-color:${task.color}"></span>
+                  <strong>${escapeHtml(task.action)}</strong>
+                </div>
+                <span class="task-meta">${escapeHtml(task.category)}</span>
+              </div>
+              <div class="template-actions">
+                <button class="mini-pill" type="button" data-edit-template="${task.id}">编辑</button>
+                <button class="mini-pill danger" type="button" data-delete-template="${task.id}">删除</button>
+              </div>
+            </div>
+          `).join("")}
+        </details>
+      `).join("")}
+    </details>
+  `;
+}
+
+function renderStats() {
+  refs.rangeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.range === ui.statsPreset);
+  });
+
+  refs.statsStartDate.value = ui.statsStart;
+  refs.statsEndDate.value = ui.statsEnd;
+
+  const entries = getEntriesWithinRange(ui.statsStart, ui.statsEnd);
+  const totalMinutes = entries.reduce((sum, entry) => sum + entryDurationMinutes(entry), 0);
+  const activeDays = new Set(entries.map((entry) => dateKey(entry.start))).size;
+  const categoryCount = new Set(entries.map((entry) => shortTag(entry))).size;
+
+  refs.statsSummary.innerHTML = `
+    <article class="summary-card">
+      <p class="summary-label">实际时长</p>
+      <strong>${humanizeMinutes(totalMinutes)}</strong>
+    </article>
+    <article class="summary-card">
+      <p class="summary-label">记录次数</p>
+      <strong>${entries.length}</strong>
+    </article>
+    <article class="summary-card">
+      <p class="summary-label">活跃天数</p>
+      <strong>${activeDays}</strong>
+    </article>
+    <article class="summary-card">
+      <p class="summary-label">涉及分类</p>
+      <strong>${categoryCount}</strong>
+    </article>
+  `;
+
+  renderStatsBreakdown(entries);
+}
+
+function renderStatsBreakdown(entries) {
+  const groups = new Map();
+  entries.forEach((entry) => {
+    const key = entry.taskId || entry.title;
+    const task = entry.taskId ? findTask(entry.taskId) : null;
+    const current = groups.get(key) || {
+      label: entry.title,
+      note: task ? `${task.folder} / ${task.category} / ${task.action}` : "临时记录",
+      color: task?.color || getTaskPaletteColors()[0] || "#AFC7FF",
+      minutes: 0
+    };
+    current.minutes += entryDurationMinutes(entry);
+    groups.set(key, current);
+  });
+
+  const ordered = [...groups.values()].sort((a, b) => b.minutes - a.minutes);
+  refs.statsBreakdown.innerHTML = ordered.length
+    ? ordered.map((item) => `
+      <article class="breakdown-row">
+        <div class="breakdown-stack">
+          <span class="breakdown-dot" style="--swatch-color:${item.color}"></span>
+          <div>
+            <strong>${escapeHtml(item.label)}</strong>
+            <p class="stats-note">${escapeHtml(item.note)}</p>
+          </div>
+        </div>
+        <strong>${humanizeMinutes(item.minutes)}</strong>
+      </article>
+    `).join("")
+    : renderEmptyState("这个时间范围还没有记录。");
+}
+
+function renderSettings() {
+  refs.themeGrid.innerHTML = THEMES.map((theme) => `
+    <button class="theme-card ${theme.id === state.preferences.themeId ? "active" : ""}" type="button" data-theme-id="${theme.id}">
+      <strong>${escapeHtml(theme.name)}</strong>
+      <p class="helper-copy">${escapeHtml(theme.mood)}</p>
+      <div class="theme-preview">
+        ${theme.palette.map((color) => `<span class="swatch" style="--swatch-color:${color}"></span>`).join("")}
+      </div>
+    </button>
+  `).join("");
+
+  refs.paletteGrid.innerHTML = getPaletteCards().map((palette) => `
+    <button class="palette-card ${palette.id === state.preferences.paletteId ? "active" : ""}" type="button" data-palette-id="${palette.id}">
+      <strong>${escapeHtml(palette.name)}</strong>
+      <p class="helper-copy">${escapeHtml(palette.note)}</p>
+      <div class="palette-strip">
+        ${palette.colors.map((color) => `<span class="palette-chip" style="--swatch-color:${color}"></span>`).join("")}
+      </div>
+    </button>
+  `).join("");
+
+  refs.customPaletteInput.value = state.preferences.customPalette.join(",");
+  refs.customPalettePreview.innerHTML = state.preferences.customPalette.length
+    ? state.preferences.customPalette.map((color) => `<span class="palette-chip" style="--swatch-color:${color}"></span>`).join("")
+    : renderEmptyState("还没有导入自定义颜色组。");
 }
 
 function switchView(view, quiet = false) {
@@ -467,340 +796,349 @@ function switchView(view, quiet = false) {
     button.classList.toggle("active", button.dataset.viewTarget === view);
   });
   if (!quiet) {
+    if (view === "home") {
+      renderHome();
+    }
+    if (view === "tasks") {
+      renderTaskLibrary();
+    }
     if (view === "stats") {
       renderStats();
     }
-    if (view === "tasks") {
-      renderTaskTree();
+    if (view === "settings") {
+      renderSettings();
     }
   }
 }
 
-function renderSearchSuggestions() {
-  const query = refs.taskSearch.value.trim().toLowerCase();
-  const tasks = getSortedTasks(query).slice(0, 6);
-  const modeCopy = ui.searchMode === "manual" ? "补录这项" : "加入今天";
+function handleOpenSheet(sheetId) {
+  if (sheetId === "create-sheet") {
+    resetCreateForm();
+  }
+  if (sheetId === "quick-sheet") {
+    refs.quickForm.reset();
+  }
+  if (sheetId === "log-sheet") {
+    resetLogForm();
+  }
+  if (sheetId === "start-sheet") {
+    resetStartForm();
+  }
+  closeSheet("action-sheet");
+  openSheet(sheetId);
+}
 
-  if (!query) {
-    refs.searchSuggestions.classList.add("hidden");
-    refs.searchSuggestions.innerHTML = "";
+function openSheet(id) {
+  const layer = document.querySelector(`#${id}`);
+  if (layer) {
+    layer.classList.remove("hidden");
+  }
+}
+
+function closeSheet(id) {
+  const layer = document.querySelector(`#${id}`);
+  if (layer) {
+    layer.classList.add("hidden");
+  }
+}
+
+function resetCreateForm() {
+  refs.createForm.reset();
+  refs.createForm.elements.taskId.value = "";
+  refs.createCategoryValue.textContent = "可选";
+}
+
+function resetLogForm() {
+  refs.logForm.reset();
+  refs.logForm.elements.taskId.value = "";
+  refs.logForm.elements.date.value = dateKey(new Date());
+  refs.logForm.elements.startTime.value = defaultStartTime();
+  refs.logForm.elements.endTime.value = defaultEndTime();
+  refs.logCategoryValue.textContent = "可选";
+}
+
+function resetStartForm() {
+  refs.startForm.reset();
+  refs.startForm.elements.taskId.value = "";
+  refs.startCategoryValue.textContent = "可选";
+}
+
+function openCategorySheet(target, returnSheetId) {
+  ui.categoryTarget = target;
+  ui.returnSheetId = returnSheetId;
+  ui.categoryStep = "folder";
+  ui.categoryFolder = "";
+  ui.categoryCategory = "";
+  renderCategorySheet();
+  closeSheet(returnSheetId);
+  openSheet("category-sheet");
+}
+
+function renderCategorySheet() {
+  const tasks = [...state.tasks].sort((a, b) => (
+    `${a.folder}${a.category}${a.action}`.localeCompare(`${b.folder}${b.category}${b.action}`, "zh-CN")
+  ));
+
+  if (ui.categoryStep === "folder") {
+    const folders = uniqueValues(tasks.map((task) => task.folder));
+    refs.categoryPath.textContent = "先选一级分类";
+    refs.categoryList.innerHTML = folders.map((folder) => (
+      `<button class="category-item" type="button" data-category-folder="${escapeAttr(folder)}">
+        <strong>${escapeHtml(folder)}</strong><span>›</span>
+      </button>`
+    )).join("");
     return;
   }
 
-  const createAction = `
-    <button class="search-result" type="button" data-create-task="${escapeAttr(refs.taskSearch.value.trim())}">
-      <div>
-        <strong>新建“${escapeHtml(refs.taskSearch.value.trim())}”</strong>
-        <div class="tiny-copy">如果任务库没有，就直接补进去。</div>
-      </div>
-      <span class="repeat-chip">新任务</span>
-    </button>
-  `;
+  if (ui.categoryStep === "category") {
+    const categories = uniqueValues(tasks
+      .filter((task) => task.folder === ui.categoryFolder)
+      .map((task) => task.category));
+    refs.categoryPath.textContent = `${ui.categoryFolder}`;
+    refs.categoryList.innerHTML = categories.map((category) => (
+      `<button class="category-item" type="button" data-category-name="${escapeAttr(category)}">
+        <strong>${escapeHtml(category)}</strong><span>›</span>
+      </button>`
+    )).join("");
+    return;
+  }
 
-  refs.searchSuggestions.classList.remove("hidden");
-  refs.searchSuggestions.innerHTML = tasks.map((task) => `
-    <button class="search-result" type="button" data-select-task="${task.id}">
-      <div>
+  refs.categoryPath.textContent = `${ui.categoryFolder} / ${ui.categoryCategory}`;
+  refs.categoryList.innerHTML = tasks
+    .filter((task) => task.folder === ui.categoryFolder && task.category === ui.categoryCategory)
+    .map((task) => `
+      <button class="category-item" type="button" data-category-task="${task.id}">
         <strong>${escapeHtml(task.action)}</strong>
-        <div class="tiny-copy">${escapeHtml(task.category)} · ${escapeHtml(task.folder)}</div>
-      </div>
-      <span class="repeat-chip">${modeCopy}</span>
-    </button>
-  `).join("") + createAction;
+        <span class="tag">${escapeHtml(task.category)}</span>
+      </button>
+    `).join("");
 }
 
-function renderTodayPlans() {
-  const plans = getTodayPlans();
-  if (!plans.length) {
-    refs.todayPlanList.innerHTML = renderEmptyState("先在上面搜一个任务，把它加入今天。");
+function handleCategoryBack() {
+  if (ui.categoryStep === "action") {
+    ui.categoryStep = "category";
+    renderCategorySheet();
+    return;
+  }
+  if (ui.categoryStep === "category") {
+    ui.categoryStep = "folder";
+    ui.categoryFolder = "";
+    renderCategorySheet();
+  }
+}
+
+function clearCategorySelection() {
+  applyCategorySelection("");
+}
+
+function handleCategoryListClick(event) {
+  const folderButton = event.target.closest("[data-category-folder]");
+  if (folderButton) {
+    ui.categoryFolder = folderButton.dataset.categoryFolder;
+    ui.categoryStep = "category";
+    renderCategorySheet();
     return;
   }
 
-  refs.todayPlanList.innerHTML = plans.map((plan) => {
-    const task = findTask(plan.taskId);
-    if (!task) {
-      return "";
-    }
-    return `
-      <article class="plan-card ${plan.completed ? "completed" : ""}">
-        <button class="plan-check" type="button" style="--task-color: ${task.color}" data-toggle-plan="${plan.id}"></button>
-        <div class="plan-card-main">
-          <div class="plan-topline">
-            <span class="time-chip">${escapeHtml(plan.startTime)} - ${escapeHtml(plan.endTime)}</span>
-            ${task.repeat !== "none" ? `<span class="repeat-chip">${escapeHtml(formatRepeat(task.repeat))}</span>` : ""}
-          </div>
-          <div>
-            <div class="plan-card-title">${escapeHtml(task.action)}</div>
-            <div class="task-subline">${escapeHtml(task.category)}</div>
-          </div>
-          <div class="plan-actions">
-            <button class="mini-button" type="button" data-start-plan="${plan.id}">开始</button>
-            <button class="mini-button" type="button" data-manual-plan="${plan.id}">补录</button>
-          </div>
-        </div>
-      </article>
-    `;
-  }).join("");
-}
-
-function renderTodayChart() {
-  refs.chartModeButtons.forEach((button) => {
-    button.classList.toggle("active", button.dataset.chartMode === ui.chartMode);
-  });
-
-  const today = dateKey(new Date());
-  const segments = ui.chartMode === "actual" ? getEntryClockSegments(today) : getPlanClockSegments(today);
-  const totalMinutes = segments.reduce((sum, segment) => sum + Math.max(segment.endMinutes - segment.startMinutes, 0), 0);
-  refs.dayPie.style.setProperty("--clock-gradient", buildClockGradient(segments));
-  refs.todayTotal.textContent = ui.chartMode === "actual" ? `已记录 ${humanizeMinutes(totalMinutes)}` : `已计划 ${humanizeMinutes(totalMinutes)}`;
-  refs.pieCoreLabel.textContent = ui.chartMode === "actual" ? "实际" : "计划";
-  refs.pieCoreTotal.textContent = humanizeMinutes(totalMinutes);
-  refs.todayLegend.innerHTML = buildLegend(getTaskDurationGroups(segments));
-
-  if (ui.chartMode === "actual") {
-    const entries = getEntriesForDate(today).sort((a, b) => new Date(b.start) - new Date(a.start));
-    refs.todayTimeline.innerHTML = entries.length
-      ? entries.map(renderEntryCard).join("")
-      : renderEmptyState("开始记录之后，这里会按时间展开今天的实际轨迹。");
+  const categoryButton = event.target.closest("[data-category-name]");
+  if (categoryButton) {
+    ui.categoryCategory = categoryButton.dataset.categoryName;
+    ui.categoryStep = "action";
+    renderCategorySheet();
     return;
   }
 
-  const plans = getTodayPlans();
-  refs.todayTimeline.innerHTML = plans.length
-    ? plans.map(renderPlanEntryCard).join("")
-    : renderEmptyState("还没有今天的计划。");
-}
-
-function renderActiveRibbon() {
-  if (!state.activeSession) {
-    refs.activeRibbon.classList.add("hidden");
-    refs.appShell.classList.remove("session-live");
-    return;
-  }
-
-  const task = findTask(state.activeSession.taskId);
-  if (!task) {
-    refs.activeRibbon.classList.add("hidden");
-    refs.appShell.classList.remove("session-live");
-    return;
-  }
-
-  const duration = nowTick - new Date(state.activeSession.start).getTime();
-  refs.activeRibbon.classList.remove("hidden");
-  refs.appShell.classList.add("session-live");
-  refs.activeRibbonDot.style.background = task.color;
-  refs.activeRibbonTask.textContent = task.action;
-
-  if (state.activeSession.targetEnd) {
-    const remaining = new Date(state.activeSession.targetEnd).getTime() - nowTick;
-    refs.activeRibbonMeta.textContent = remaining >= 0 ? "倒计时" : "已超时";
-    refs.activeRibbonDetail.textContent = `${task.category} · ${formatDurationClock(Math.abs(remaining))}`;
-  } else {
-    refs.activeRibbonMeta.textContent = "进行中";
-    refs.activeRibbonDetail.textContent = `${task.category} · ${formatDurationClock(duration)}`;
-  }
-}
-
-function renderTaskTree() {
-  const groups = groupTasksByFolderAndCategory();
-  refs.taskTree.innerHTML = groups.length
-    ? groups.map(renderFolderBlock).join("")
-    : renderEmptyState("任务库还没有内容，先建一个。");
-}
-
-function renderStats() {
-  setActiveRangePill();
-  const range = getStatsRange();
-  refs.statsStartDate.value = range.startDate;
-  refs.statsEndDate.value = range.endDate;
-
-  const entries = getEntriesWithinRange(range.startDate, range.endDate).filter(matchesStatsFilter);
-  const plans = getPlansWithinRange(range.startDate, range.endDate).filter(matchesStatsFilter);
-  const totalMinutes = entries.reduce((sum, entry) => sum + entryDurationMinutes(entry), 0);
-  const planMinutes = plans.reduce((sum, plan) => sum + planDurationMinutes(plan), 0);
-  const completion = planMinutes ? Math.min(Math.round((totalMinutes / planMinutes) * 100), 999) : 0;
-  const activeDays = new Set(entries.map((entry) => dateKey(entry.start))).size;
-
-  refs.statsTotalDuration.textContent = humanizeMinutes(totalMinutes);
-  refs.statsPlanDuration.textContent = humanizeMinutes(planMinutes);
-  refs.statsCompletionRate.textContent = `${completion}%`;
-  refs.statsActiveDays.textContent = `${activeDays}天`;
-  renderStatsBreakdown(entries);
-  renderStatsBars(entries, range.startDate, range.endDate);
-}
-
-function renderStatsBreakdown(entries) {
-  const groups = new Map();
-  entries.forEach((entry) => {
-    const task = findTask(entry.taskId);
-    if (!task) {
-      return;
-    }
-    const current = groups.get(task.id) || {
-      label: `${task.action} · ${task.category}`,
-      color: task.color,
-      minutes: 0
-    };
-    current.minutes += entryDurationMinutes(entry);
-    groups.set(task.id, current);
-  });
-
-  const ordered = [...groups.values()].sort((a, b) => b.minutes - a.minutes);
-  const total = ordered.reduce((sum, item) => sum + item.minutes, 0);
-  refs.statsBreakdown.innerHTML = ordered.length
-    ? ordered.map((item) => `
-      <div class="legend-line">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="legend-dot" style="background:${item.color}"></span>
-          <div>
-            <strong>${escapeHtml(item.label)}</strong>
-            <div class="tiny-copy">${Math.round((item.minutes / total) * 100)}%</div>
-          </div>
-        </div>
-        <span>${humanizeMinutes(item.minutes)}</span>
-      </div>
-    `).join("")
-    : renderEmptyState("这个时间范围还没有可统计的记录。");
-}
-
-function renderStatsBars(entries, startDate, endDate) {
-  const days = enumerateDateKeys(startDate, endDate);
-  const totals = days.map((day) => ({
-    day,
-    minutes: entries.filter((entry) => dateKey(entry.start) === day).reduce((sum, entry) => sum + entryDurationMinutes(entry), 0)
-  }));
-  const maxMinutes = Math.max(...totals.map((item) => item.minutes), 1);
-  refs.statsBarChart.innerHTML = totals.map((item) => `
-    <div class="bar-item">
-      <div class="bar-column" style="height:${item.minutes ? Math.max((item.minutes / maxMinutes) * 150, 12) : 12}px"></div>
-      <span class="tiny-copy">${formatShortDate(item.day)}</span>
-      <strong>${item.minutes ? humanizeMinutes(item.minutes) : "0分"}</strong>
-    </div>
-  `).join("");
-}
-
-function renderSettings() {
-  renderThemeGrid();
-  renderPaletteGrid();
-  refs.customPaletteInput.value = state.preferences.customPalette.join(",");
-  refs.customPalettePreview.innerHTML = state.preferences.customPalette.length
-    ? state.preferences.customPalette.map((color) => `<span class="preview-swatch" style="--swatch-color:${color}"></span>`).join("")
-    : renderInlineHint("还没有导入自定义颜色组。");
-}
-
-function renderThemeGrid() {
-  refs.themeGrid.innerHTML = THEMES.map((theme) => `
-    <button class="theme-card ${theme.id === state.preferences.themeId ? "active" : ""}" type="button" data-theme-id="${theme.id}">
-      <div class="task-node-header">
-        <strong>${escapeHtml(theme.name)}</strong>
-        <span class="tiny-copy">${escapeHtml(theme.mood)}</span>
-      </div>
-      <div class="theme-preview">
-        ${theme.palette.map((color) => `<span class="preview-swatch" style="--swatch-color:${color}"></span>`).join("")}
-      </div>
-    </button>
-  `).join("");
-}
-
-function renderPaletteGrid() {
-  refs.paletteGrid.innerHTML = getPaletteCards().map((palette) => `
-    <button class="palette-card ${palette.id === state.preferences.paletteId ? "active" : ""}" type="button" data-palette-id="${palette.id}">
-      <strong>${escapeHtml(palette.name)}</strong>
-      <div class="tiny-copy">${escapeHtml(palette.note)}</div>
-      <div class="palette-preview">
-        ${palette.colors.map((color) => `<span class="preview-swatch" style="--swatch-color:${color}"></span>`).join("")}
-      </div>
-    </button>
-  `).join("");
-}
-
-function handleSearchSuggestionActions(event) {
-  const taskButton = event.target.closest("[data-select-task]");
+  const taskButton = event.target.closest("[data-category-task]");
   if (taskButton) {
-    const taskId = taskButton.dataset.selectTask;
-    openEntryModal(taskId, ui.searchMode === "manual" ? "manual" : "plan");
-    resetSearchMode();
-    return;
-  }
-
-  const createButton = event.target.closest("[data-create-task]");
-  if (createButton) {
-    openTaskModal(null, createButton.dataset.createTask);
+    applyCategorySelection(taskButton.dataset.categoryTask);
   }
 }
 
-function handleTodayPlanActions(event) {
-  const toggleButton = event.target.closest("[data-toggle-plan]");
-  if (toggleButton) {
-    togglePlanCompleted(toggleButton.dataset.togglePlan);
+function applyCategorySelection(taskId) {
+  const targetForm = refs[`${ui.categoryTarget}Form`];
+  const targetValue = refs[`${ui.categoryTarget}CategoryValue`];
+  if (!targetForm || !targetValue) {
     return;
   }
 
-  const startButton = event.target.closest("[data-start-plan]");
-  if (startButton) {
-    startPlan(startButton.dataset.startPlan);
-    return;
-  }
-
-  const manualButton = event.target.closest("[data-manual-plan]");
-  if (manualButton) {
-    const plan = findPlan(manualButton.dataset.manualPlan);
-    if (plan) {
-      openEntryModal(plan.taskId, "manual", plan.id);
+  targetForm.elements.taskId.value = taskId || "";
+  if (!taskId) {
+    targetValue.textContent = "可选";
+  } else {
+    const task = findTask(taskId);
+    targetValue.textContent = task ? `${task.folder} / ${task.category} / ${task.action}` : "可选";
+    if (task && !targetForm.elements.title.value.trim()) {
+      targetForm.elements.title.value = task.action;
     }
   }
+
+  closeSheet("category-sheet");
+  openSheet(ui.returnSheetId);
 }
 
-function handleTaskTreeActions(event) {
-  const addPlanButton = event.target.closest("[data-add-plan-task]");
-  if (addPlanButton) {
-    openEntryModal(addPlanButton.dataset.addPlanTask, "plan");
-    return;
-  }
-
-  const startButton = event.target.closest("[data-start-task]");
-  if (startButton) {
-    startTask(startButton.dataset.startTask);
-    return;
-  }
-
-  const manualButton = event.target.closest("[data-manual-task]");
-  if (manualButton) {
-    openEntryModal(manualButton.dataset.manualTask, "manual");
-    return;
-  }
-
-  const editButton = event.target.closest("[data-edit-task]");
-  if (editButton) {
-    openTaskModal(editButton.dataset.editTask);
-    return;
-  }
-
-  const deleteButton = event.target.closest("[data-delete-task]");
-  if (deleteButton) {
-    deleteTask(deleteButton.dataset.deleteTask);
-  }
-}
-
-function handleTaskSubmit(event) {
+function handleCreateSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
-  const taskId = formData.get("taskId")?.toString() || "";
-  const payload = {
-    folder: (formData.get("folder") || "").toString().trim() || "未分类",
-    category: (formData.get("category") || "").toString().trim(),
-    action: (formData.get("action") || "").toString().trim(),
-    tags: (formData.get("tags") || "").toString().split(",").map((tag) => tag.trim()).filter(Boolean),
-    repeat: (formData.get("repeat") || "none").toString(),
-    color: (formData.get("color") || getTaskPaletteColors()[0] || "#8FA8B4").toString()
-  };
-
-  if (!payload.category || !payload.action) {
+  const title = String(formData.get("title") || "").trim();
+  if (!title) {
     return;
   }
+
+  state.plans.unshift(createPlan({
+    title,
+    taskId: String(formData.get("taskId") || ""),
+    date: dateKey(new Date()),
+    startTime: String(formData.get("startTime") || ""),
+    durationMinutes: parseMinutes(formData.get("durationMinutes")),
+    important: Boolean(formData.get("important"))
+  }));
+
+  saveState();
+  closeSheet("create-sheet");
+  renderAll();
+}
+
+function handleQuickSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  const title = String(formData.get("title") || "").trim();
+  if (!title) {
+    return;
+  }
+
+  const plan = createPlan({
+    title,
+    taskId: "",
+    date: dateKey(new Date()),
+    startTime: "",
+    durationMinutes: null,
+    important: false
+  });
+
+  state.plans.unshift(plan);
+  startSession({
+    title: plan.title,
+    taskId: plan.taskId,
+    planId: plan.id
+  });
+
+  closeSheet("quick-sheet");
+  renderAll();
+}
+
+function handleLogSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  const title = String(formData.get("title") || "").trim();
+  const date = String(formData.get("date") || dateKey(new Date()));
+  const startTime = String(formData.get("startTime") || "");
+  const endTime = String(formData.get("endTime") || "");
+  if (!title || !startTime || !endTime || timeToMinutes(endTime) <= timeToMinutes(startTime)) {
+    return;
+  }
+
+  state.entries.unshift({
+    id: uid("entry"),
+    title,
+    taskId: String(formData.get("taskId") || ""),
+    planId: "",
+    start: `${date}T${startTime}:00`,
+    end: `${date}T${endTime}:00`,
+    source: "manual"
+  });
+
+  saveState();
+  closeSheet("log-sheet");
+  renderAll();
+}
+
+function handleStartSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  const title = String(formData.get("title") || "").trim();
+  if (!title) {
+    return;
+  }
+
+  const plan = createPlan({
+    title,
+    taskId: String(formData.get("taskId") || ""),
+    date: dateKey(new Date()),
+    startTime: "",
+    durationMinutes: null,
+    important: false
+  });
+
+  state.plans.unshift(plan);
+  startSession({
+    title: plan.title,
+    taskId: plan.taskId,
+    planId: plan.id
+  });
+
+  closeSheet("start-sheet");
+  renderAll();
+}
+
+function openTemplateForm(taskId = "") {
+  refs.templateForm.reset();
+  refs.templateForm.elements.templateId.value = "";
+  refs.templateSheetKicker.textContent = "Task Template";
+  refs.templateSheetTitle.textContent = "新建一个分类模板";
+  const defaultColor = getTaskPaletteColors()[0] || "#AFC7FF";
+  refs.templateForm.dataset.selectedColor = defaultColor;
+  renderTemplateColorPicker(defaultColor);
 
   if (taskId) {
     const task = findTask(taskId);
+    if (!task) {
+      return;
+    }
+    refs.templateSheetKicker.textContent = "Edit Template";
+    refs.templateSheetTitle.textContent = "改一下这条分类模板";
+    refs.templateForm.elements.templateId.value = task.id;
+    refs.templateForm.elements.folder.value = task.folder;
+    refs.templateForm.elements.category.value = task.category;
+    refs.templateForm.elements.action.value = task.action;
+    refs.templateForm.dataset.selectedColor = task.color;
+    renderTemplateColorPicker(task.color);
+  }
+
+  openSheet("template-sheet");
+}
+
+function renderTemplateColorPicker(selectedColor) {
+  refs.templateColorPicker.innerHTML = getTaskPaletteColors().map((color) => `
+    <button class="palette-button ${selectedColor === color ? "active" : ""}" type="button" style="--swatch-color:${color}" data-template-color="${color}"></button>
+  `).join("");
+}
+
+function handleTemplateColorClick(event) {
+  const button = event.target.closest("[data-template-color]");
+  if (!button) {
+    return;
+  }
+  refs.templateForm.dataset.selectedColor = button.dataset.templateColor;
+  renderTemplateColorPicker(button.dataset.templateColor);
+}
+
+function handleTemplateSubmit(event) {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+  const templateId = String(formData.get("templateId") || "");
+  const payload = {
+    folder: String(formData.get("folder") || "").trim(),
+    category: String(formData.get("category") || "").trim(),
+    action: String(formData.get("action") || "").trim(),
+    color: refs.templateForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF"
+  };
+
+  if (!payload.folder || !payload.category || !payload.action) {
+    return;
+  }
+
+  if (templateId) {
+    const task = findTask(templateId);
     if (task) {
       Object.assign(task, payload);
     }
@@ -813,65 +1151,56 @@ function handleTaskSubmit(event) {
   }
 
   saveState();
-  closeModal("task-modal");
+  closeSheet("template-sheet");
   renderAll();
 }
 
-function handleColorPickerClick(event) {
-  const button = event.target.closest("[data-color]");
-  if (!button) {
-    return;
-  }
-  refs.taskForm.elements.color.value = button.dataset.color;
-  syncTaskColorPicker(button.dataset.color);
-}
-
-function handleEntrySubmit(event) {
-  event.preventDefault();
-  const formData = new FormData(event.currentTarget);
-  const taskId = formData.get("taskId")?.toString() || "";
-  const planId = formData.get("planId")?.toString() || "";
-  const mode = formData.get("mode")?.toString() || "manual";
-  const date = formData.get("date")?.toString() || dateKey(new Date());
-  const startTime = formData.get("startTime")?.toString() || "";
-  const endTime = formData.get("endTime")?.toString() || "";
-
-  if (!taskId || !startTime || !endTime || timeToMinutes(endTime) <= timeToMinutes(startTime)) {
+function handleTodoAction(event) {
+  const startButton = event.target.closest("[data-start-plan]");
+  if (startButton) {
+    startPlan(startButton.dataset.startPlan);
     return;
   }
 
-  if (mode === "plan") {
-    state.plans.push({
-      id: uid("plan"),
-      taskId,
-      date,
-      startTime,
-      endTime,
-      completed: Boolean(formData.get("completed"))
-    });
-  } else {
-    state.entries.push({
-      id: uid("entry"),
-      taskId,
-      start: `${date}T${startTime}:00`,
-      end: `${date}T${endTime}:00`,
-      source: "manual"
-    });
-    if (planId) {
-      const plan = findPlan(planId);
-      if (plan && Boolean(formData.get("completed"))) {
-        plan.completed = true;
-      }
-    }
+  const completeButton = event.target.closest("[data-complete-plan]");
+  if (completeButton) {
+    togglePlanCompleted(completeButton.dataset.completePlan);
   }
-
-  saveState();
-  closeModal("entry-modal");
-  resetSearchMode();
-  renderAll();
 }
 
-function handleThemeGridClick(event) {
+function handleFocusTimerActions(event) {
+  const openSheetButton = event.target.closest("[data-open-sheet]");
+  if (openSheetButton) {
+    handleOpenSheet(openSheetButton.dataset.openSheet);
+    return;
+  }
+
+  const pauseButton = event.target.closest("[data-pause-session]");
+  if (pauseButton) {
+    toggleSessionPause();
+    return;
+  }
+
+  const stopButton = event.target.closest("[data-stop-session]");
+  if (stopButton) {
+    stopSession();
+  }
+}
+
+function handleTaskTreeActions(event) {
+  const editButton = event.target.closest("[data-edit-template]");
+  if (editButton) {
+    openTemplateForm(editButton.dataset.editTemplate);
+    return;
+  }
+
+  const deleteButton = event.target.closest("[data-delete-template]");
+  if (deleteButton) {
+    deleteTemplate(deleteButton.dataset.deleteTemplate);
+  }
+}
+
+function handleThemeClick(event) {
   const button = event.target.closest("[data-theme-id]");
   if (!button) {
     return;
@@ -884,7 +1213,7 @@ function handleThemeGridClick(event) {
   renderAll();
 }
 
-function handlePaletteGridClick(event) {
+function handlePaletteClick(event) {
   const button = event.target.closest("[data-palette-id]");
   if (!button) {
     return;
@@ -902,109 +1231,7 @@ function saveCustomPalette() {
   state.preferences.customPalette = colors;
   state.preferences.paletteId = "custom";
   saveState();
-  renderSettings();
-  renderTaskColorPicker(colors[0]);
-}
-
-function openTaskModal(taskId = null, prefillAction = "") {
-  refs.taskModal.classList.remove("hidden");
-  refs.taskForm.reset();
-  const palette = getTaskPaletteColors();
-  const defaultColor = palette[0] || "#8FA8B4";
-  refs.taskForm.elements.color.value = defaultColor;
-  renderTaskColorPicker(defaultColor);
-
-  if (taskId) {
-    const task = findTask(taskId);
-    if (!task) {
-      return;
-    }
-    refs.taskModalKicker.textContent = "编辑任务";
-    refs.taskModalTitle.textContent = "改一下任务结构和颜色";
-    refs.taskForm.elements.taskId.value = task.id;
-    refs.taskForm.elements.folder.value = task.folder;
-    refs.taskForm.elements.category.value = task.category;
-    refs.taskForm.elements.action.value = task.action;
-    refs.taskForm.elements.tags.value = task.tags.join(", ");
-    refs.taskForm.elements.repeat.value = task.repeat;
-    refs.taskForm.elements.color.value = task.color;
-    renderTaskColorPicker(task.color);
-    return;
-  }
-
-  refs.taskModalKicker.textContent = "新建任务";
-  refs.taskModalTitle.textContent = "把一个任务放进任务库";
-  refs.taskForm.elements.taskId.value = "";
-  if (prefillAction) {
-    refs.taskForm.elements.action.value = prefillAction;
-  }
-}
-
-function renderTaskColorPicker(selectedColor) {
-  const colors = getTaskPaletteColors();
-  refs.taskColorPicker.innerHTML = colors.map((color) => `
-    <button class="swatch-button ${color === selectedColor ? "active" : ""}" type="button" style="--swatch-color:${color}" data-color="${color}"></button>
-  `).join("");
-}
-
-function syncTaskColorPicker(selectedColor) {
-  refs.taskColorPicker.querySelectorAll("[data-color]").forEach((button) => {
-    button.classList.toggle("active", button.dataset.color === selectedColor);
-  });
-}
-
-function openEntryModal(taskId, mode, planId = "") {
-  const task = findTask(taskId);
-  if (!task) {
-    return;
-  }
-
-  refs.entryModal.classList.remove("hidden");
-  refs.entryForm.reset();
-  refs.entryForm.elements.taskId.value = taskId;
-  refs.entryForm.elements.planId.value = planId;
-  refs.entryForm.elements.mode.value = mode;
-  refs.entryForm.elements.date.value = dateKey(new Date());
-  refs.entryForm.elements.startTime.value = defaultStartTime();
-  refs.entryForm.elements.endTime.value = defaultEndTime();
-  refs.entryTaskBanner.innerHTML = `
-    <strong>${escapeHtml(task.action)}</strong>
-    <div class="task-subline">${escapeHtml(task.category)}</div>
-  `;
-
-  if (mode === "plan") {
-    refs.entryModalKicker.textContent = "加入今天";
-    refs.entryModalTitle.textContent = "给这项任务安排时间";
-    refs.entryCompleteRow.classList.remove("hidden");
-  } else {
-    refs.entryModalKicker.textContent = "补录";
-    refs.entryModalTitle.textContent = "补录一段实际时间";
-    refs.entryCompleteRow.classList.add("hidden");
-  }
-
-  if (planId) {
-    const plan = findPlan(planId);
-    if (plan) {
-      refs.entryForm.elements.date.value = plan.date;
-      refs.entryForm.elements.startTime.value = plan.startTime;
-      refs.entryForm.elements.endTime.value = plan.endTime;
-      refs.entryCompleteRow.classList.remove("hidden");
-    }
-  }
-}
-
-function closeModal(id) {
-  const modal = document.querySelector(`#${id}`);
-  if (modal) {
-    modal.classList.add("hidden");
-  }
-}
-
-function resetSearchMode() {
-  ui.searchMode = "plan";
-  refs.taskSearch.value = "";
-  refs.searchSuggestions.classList.add("hidden");
-  refs.searchSuggestions.innerHTML = "";
+  renderAll();
 }
 
 function startPlan(planId) {
@@ -1012,74 +1239,98 @@ function startPlan(planId) {
   if (!plan) {
     return;
   }
-  plan.completed = true;
-  startTask(plan.taskId, plan.id, `${plan.date}T${plan.endTime}:00`);
+
+  if (state.activeSession?.planId === plan.id) {
+    if (isSessionPaused(state.activeSession)) {
+      toggleSessionPause();
+    }
+    return;
+  }
+
+  startSession({
+    title: plan.title,
+    taskId: plan.taskId,
+    planId: plan.id
+  });
+  renderAll();
 }
 
-function startTask(taskId, planId = null, targetEnd = null) {
-  if (state.activeSession && state.activeSession.taskId !== taskId) {
-    finalizeActiveSession();
+function startSession({ title, taskId = "", planId = "" }) {
+  if (state.activeSession) {
+    stopSession(false);
   }
 
   state.activeSession = {
+    title,
     taskId,
-    start: new Date().toISOString(),
-    targetEnd,
-    planId
+    planId,
+    pausedAt: null,
+    segments: [{ start: new Date().toISOString(), end: null }]
   };
+
   saveState();
-  renderAll();
 }
 
-function finalizeActiveSession() {
-  if (!state.activeSession) {
+function toggleSessionPause() {
+  const session = state.activeSession;
+  if (!session) {
     return;
   }
-  state.entries.push({
-    id: uid("entry"),
-    taskId: state.activeSession.taskId,
-    start: state.activeSession.start,
-    end: new Date().toISOString(),
-    source: "timer"
+
+  if (isSessionPaused(session)) {
+    session.pausedAt = null;
+    session.segments.push({ start: new Date().toISOString(), end: null });
+  } else {
+    closeOpenSegment(session);
+    session.pausedAt = new Date().toISOString();
+  }
+
+  saveState();
+  renderFocusTimer();
+}
+
+function stopSession(shouldRender = true) {
+  const session = state.activeSession;
+  if (!session) {
+    return;
+  }
+
+  closeOpenSegment(session);
+
+  session.segments.forEach((segment) => {
+    if (!segment.end || new Date(segment.end).getTime() <= new Date(segment.start).getTime()) {
+      return;
+    }
+    state.entries.unshift({
+      id: uid("entry"),
+      title: session.title,
+      taskId: session.taskId,
+      planId: session.planId,
+      start: segment.start,
+      end: segment.end,
+      source: "timer"
+    });
   });
+
+  if (session.planId) {
+    const plan = findPlan(session.planId);
+    if (plan) {
+      plan.completed = true;
+    }
+  }
+
   state.activeSession = null;
+  saveState();
+  if (shouldRender) {
+    renderAll();
+  }
 }
 
-function endActiveSession() {
-  if (!state.activeSession) {
-    return;
+function closeOpenSegment(session) {
+  const last = session.segments[session.segments.length - 1];
+  if (last && !last.end) {
+    last.end = new Date().toISOString();
   }
-  finalizeActiveSession();
-  saveState();
-  renderAll();
-}
-
-function setActiveTargetTime() {
-  if (!state.activeSession) {
-    return;
-  }
-  const current = state.activeSession.targetEnd ? formatTimeLabel(state.activeSession.targetEnd) : "";
-  const value = window.prompt("输入目标结束时间，例如 12:00；留空则清除。", current);
-  if (value === null) {
-    return;
-  }
-  const trimmed = value.trim();
-  if (!trimmed) {
-    state.activeSession.targetEnd = null;
-    saveState();
-    renderActiveRibbon();
-    return;
-  }
-  if (!/^\d{2}:\d{2}$/.test(trimmed)) {
-    return;
-  }
-  const [hours, minutes] = trimmed.split(":").map(Number);
-  if (hours > 23 || minutes > 59) {
-    return;
-  }
-  state.activeSession.targetEnd = `${dateKey(new Date(state.activeSession.start))}T${trimmed}:00`;
-  saveState();
-  renderActiveRibbon();
 }
 
 function togglePlanCompleted(planId) {
@@ -1089,296 +1340,150 @@ function togglePlanCompleted(planId) {
   }
   plan.completed = !plan.completed;
   saveState();
-  renderTodayPlans();
+  renderHome();
 }
 
-function deleteTask(taskId) {
-  state.tasks = state.tasks.filter((task) => task.id !== taskId);
-  state.plans = state.plans.filter((plan) => plan.taskId !== taskId);
-  state.entries = state.entries.filter((entry) => entry.taskId !== taskId);
+function deleteTemplate(taskId) {
+  const task = findTask(taskId);
+  if (!task) {
+    return;
+  }
+
+  const confirmed = window.confirm(`删除模板“${task.action}”？已有的时间记录会保留标题，但不再关联这个模板。`);
+  if (!confirmed) {
+    return;
+  }
+
+  state.tasks = state.tasks.filter((item) => item.id !== taskId);
+  state.plans.forEach((plan) => {
+    if (plan.taskId === taskId) {
+      plan.taskId = "";
+    }
+  });
+  state.entries.forEach((entry) => {
+    if (entry.taskId === taskId) {
+      entry.taskId = "";
+    }
+  });
   if (state.activeSession?.taskId === taskId) {
-    state.activeSession = null;
+    state.activeSession.taskId = "";
   }
   saveState();
   renderAll();
 }
 
-function exportData() {
-  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = `caishi-data-${dateKey(new Date())}.json`;
-  anchor.click();
-  URL.revokeObjectURL(url);
+function getTodayBuckets() {
+  const plans = getTodayPlans();
+  const nowMinutes = currentMinutes();
+
+  const overdue = [];
+  const today = [];
+  const flexible = [];
+
+  plans.filter((plan) => !plan.completed).forEach((plan) => {
+    if (!plan.startTime) {
+      flexible.push(plan);
+      return;
+    }
+    if (!isPlanRunning(plan) && timeToMinutes(plan.startTime) < nowMinutes) {
+      overdue.push(plan);
+      return;
+    }
+    today.push(plan);
+  });
+
+  return {
+    overdue,
+    today,
+    flexible: flexible.sort((a, b) => Number(b.important) - Number(a.important) || createdTime(a) - createdTime(b))
+  };
 }
 
-function clearTodayData() {
+function getCompletedItems() {
   const today = dateKey(new Date());
-  state.entries = state.entries.filter((entry) => dateKey(entry.start) !== today);
-  state.plans = state.plans.filter((plan) => plan.date !== today);
-  if (state.activeSession && dateKey(state.activeSession.start) === today) {
-    state.activeSession = null;
-  }
-  saveState();
-  renderAll();
+  const planned = getTodayPlans()
+    .filter((plan) => plan.completed)
+    .map((plan) => ({
+      id: `plan-${plan.id}`,
+      title: plan.title,
+      tag: shortTag(plan),
+      meta: plan.startTime ? `${plan.startTime}${planDurationMinutes(plan) ? ` · ${planDurationMinutes(plan)} min` : ""}` : "已完成"
+    }));
+
+  const standaloneEntries = state.entries
+    .filter((entry) => dateKey(entry.start) === today && !entry.planId)
+    .map((entry) => ({
+      id: `entry-${entry.id}`,
+      title: entry.title,
+      tag: shortTag(entry),
+      meta: `${formatTime(entry.start)} - ${formatTime(entry.end)}`
+    }));
+
+  return [...planned, ...standaloneEntries];
 }
 
-function groupTasksByFolderAndCategory() {
-  const folders = new Map();
-  [...state.tasks]
-    .sort((a, b) => `${a.folder}${a.category}${a.action}`.localeCompare(`${b.folder}${b.category}${b.action}`, "zh-CN"))
-    .forEach((task) => {
-      const folder = folders.get(task.folder) || { name: task.folder, categories: new Map() };
-      const category = folder.categories.get(task.category) || { name: task.category, tasks: [] };
-      category.tasks.push(task);
-      folder.categories.set(task.category, category);
-      folders.set(task.folder, folder);
+function getNextItems(limit = 5) {
+  const todayPlans = getTodayPlans().filter((plan) => !plan.completed);
+  if (!todayPlans.length) {
+    return [];
+  }
+
+  const running = todayPlans.find((plan) => isPlanRunning(plan));
+  const timed = todayPlans
+    .filter((plan) => plan.startTime && !isPlanRunning(plan))
+    .sort((a, b) => {
+      const aDistance = Math.abs(timeToMinutes(a.startTime) - currentMinutes());
+      const bDistance = Math.abs(timeToMinutes(b.startTime) - currentMinutes());
+      if (aDistance !== bDistance) {
+        return aDistance - bDistance;
+      }
+      return comparePlans(a, b);
     });
 
-  return [...folders.values()].map((folder) => ({
-    ...folder,
-    categories: [...folder.categories.values()]
-  }));
-}
+  const important = todayPlans
+    .filter((plan) => plan.important && !isPlanRunning(plan))
+    .sort(comparePlans);
 
-function renderFolderBlock(folder, folderIndex) {
-  return `
-    <details class="tree-folder" ${folderIndex === 0 ? "open" : ""}>
-      <summary>
-        <span>${escapeHtml(folder.name)}</span>
-        <span class="tiny-copy">${folder.categories.length} 个二级分类</span>
-      </summary>
-      <div class="tree-folder-body">
-        ${folder.categories.map((category, categoryIndex) => `
-          <details class="tree-category" ${categoryIndex === 0 ? "open" : ""}>
-            <summary>
-              <span>${escapeHtml(category.name)}</span>
-              <span class="tiny-copy">${category.tasks.length} 项任务</span>
-            </summary>
-            <div class="tree-category-body">
-              ${category.tasks.map((task) => renderTaskRow(task)).join("")}
-            </div>
-          </details>
-        `).join("")}
-      </div>
-    </details>
-  `;
-}
+  const flexible = todayPlans
+    .filter((plan) => !plan.startTime && !isPlanRunning(plan))
+    .sort((a, b) => Number(b.important) - Number(a.important) || createdTime(a) - createdTime(b));
 
-function renderTaskRow(task) {
-  return `
-    <article class="tree-task-row">
-      <div class="task-node-header">
-        <div style="display:flex;gap:10px;align-items:center;">
-          <span class="task-node-dot" style="background:${task.color}"></span>
-          <div>
-            <strong>${escapeHtml(task.action)}</strong>
-            <div class="task-node-meta">${escapeHtml(task.category)} · ${escapeHtml(formatRepeat(task.repeat))}</div>
-          </div>
-        </div>
-      </div>
-      <div class="task-row-actions">
-        <button class="mini-button" type="button" data-add-plan-task="${task.id}">加入今天</button>
-        <button class="mini-button" type="button" data-manual-task="${task.id}">补录</button>
-        <button class="mini-button" type="button" data-start-task="${task.id}">开始</button>
-        <button class="mini-button" type="button" data-edit-task="${task.id}">编辑</button>
-        <button class="mini-button danger-text" type="button" data-delete-task="${task.id}">删除</button>
-      </div>
-    </article>
-  `;
+  const ordered = dedupeById([
+    ...(running ? [running] : []),
+    ...timed,
+    ...important,
+    ...flexible
+  ]);
+
+  return ordered.slice(0, limit);
 }
 
 function getTodayPlans() {
   const today = dateKey(new Date());
   return state.plans
     .filter((plan) => plan.date === today)
-    .sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
+    .sort(comparePlans);
 }
 
-function getEntryClockSegments(day) {
-  const entries = getEntriesForDate(day).map((entry) => {
-    const task = findTask(entry.taskId);
-    const start = new Date(entry.start);
-    const end = new Date(entry.end);
-    return {
-      startMinutes: start.getHours() * 60 + start.getMinutes(),
-      endMinutes: end.getHours() * 60 + end.getMinutes(),
-      color: task?.color || "#d8d3cb",
-      label: task ? `${task.action} · ${task.category}` : "未命名任务"
-    };
-  });
-
-  if (state.activeSession && dateKey(state.activeSession.start) === day) {
-    const task = findTask(state.activeSession.taskId);
-    entries.push({
-      startMinutes: new Date(state.activeSession.start).getHours() * 60 + new Date(state.activeSession.start).getMinutes(),
-      endMinutes: new Date(nowTick).getHours() * 60 + new Date(nowTick).getMinutes(),
-      color: task?.color || "#d8d3cb",
-      label: task ? `${task.action} · ${task.category}` : "进行中"
-    });
+function comparePlans(a, b) {
+  const aHasTime = Boolean(a.startTime);
+  const bHasTime = Boolean(b.startTime);
+  if (aHasTime !== bHasTime) {
+    return aHasTime ? -1 : 1;
   }
-
-  return entries.filter((segment) => segment.endMinutes > segment.startMinutes);
-}
-
-function getPlanClockSegments(day) {
-  return state.plans
-    .filter((plan) => plan.date === day)
-    .map((plan) => {
-      const task = findTask(plan.taskId);
-      return {
-        startMinutes: timeToMinutes(plan.startTime),
-        endMinutes: timeToMinutes(plan.endTime),
-        color: task?.color || "#d8d3cb",
-        label: task ? `${task.action} · ${task.category}` : "未命名任务"
-      };
-    })
-    .filter((segment) => segment.endMinutes > segment.startMinutes);
-}
-
-function buildClockGradient(segments, neutral = getTheme().neutralSlice) {
-  if (!segments.length) {
-    return `conic-gradient(from -90deg, ${neutral} 0% 100%)`;
-  }
-  const sorted = [...segments].sort((a, b) => a.startMinutes - b.startMinutes);
-  let cursor = 0;
-  const stops = [];
-  sorted.forEach((segment) => {
-    const start = clamp(segment.startMinutes, 0, DAY_MINUTES);
-    const end = clamp(segment.endMinutes, 0, DAY_MINUTES);
-    if (start > cursor) {
-      stops.push(`${neutral} ${(cursor / DAY_MINUTES) * 100}% ${(start / DAY_MINUTES) * 100}%`);
+  if (aHasTime && bHasTime) {
+    const startDiff = timeToMinutes(a.startTime) - timeToMinutes(b.startTime);
+    if (startDiff !== 0) {
+      return startDiff;
     }
-    stops.push(`${segment.color} ${(start / DAY_MINUTES) * 100}% ${(end / DAY_MINUTES) * 100}%`);
-    cursor = Math.max(cursor, end);
-  });
-  if (cursor < DAY_MINUTES) {
-    stops.push(`${neutral} ${(cursor / DAY_MINUTES) * 100}% 100%`);
   }
-  return `conic-gradient(from -90deg, ${stops.join(", ")})`;
+  return createdTime(a) - createdTime(b);
 }
 
-function getTaskDurationGroups(segments) {
-  const groups = new Map();
-  segments.forEach((segment) => {
-    const current = groups.get(segment.label) || {
-      label: segment.label,
-      color: segment.color,
-      minutes: 0
-    };
-    current.minutes += Math.max(segment.endMinutes - segment.startMinutes, 0);
-    groups.set(segment.label, current);
-  });
-  return [...groups.values()].sort((a, b) => b.minutes - a.minutes);
-}
-
-function buildLegend(groups) {
-  if (!groups.length) {
-    return renderEmptyState("颜色会在你开始安排或记录之后铺满这张时间盘。");
-  }
-  return groups.map((group) => `
-    <div class="legend-line">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="legend-dot" style="background:${group.color}"></span>
-        <strong>${escapeHtml(group.label)}</strong>
-      </div>
-      <span>${humanizeMinutes(group.minutes)}</span>
-    </div>
-  `).join("");
-}
-
-function renderEntryCard(entry) {
-  const task = findTask(entry.taskId);
-  if (!task) {
-    return "";
-  }
-  return `
-    <article class="entry-card">
-      <strong>${escapeHtml(task.action)}</strong>
-      <div class="entry-meta">${formatTimeLabel(entry.start)} - ${formatTimeLabel(entry.end)} · ${humanizeMinutes(entryDurationMinutes(entry))}</div>
-      <div class="entry-type-chip">${entry.source === "manual" ? "补录" : "计时"}</div>
-    </article>
-  `;
-}
-
-function renderPlanEntryCard(plan) {
-  const task = findTask(plan.taskId);
-  if (!task) {
-    return "";
-  }
-  return `
-    <article class="entry-card">
-      <strong>${escapeHtml(task.action)}</strong>
-      <div class="entry-meta">${escapeHtml(plan.startTime)} - ${escapeHtml(plan.endTime)} · ${escapeHtml(task.category)}</div>
-      <div class="entry-type-chip">${plan.completed ? "已完成" : "待进行"}</div>
-    </article>
-  `;
-}
-
-function getSortedTasks(query) {
-  const normalizedQuery = query.trim().toLowerCase();
-  return [...state.tasks]
-    .filter((task) => {
-      if (!normalizedQuery) {
-        return true;
-      }
-      const haystack = `${task.folder} ${task.category} ${task.action} ${task.tags.join(" ")}`.toLowerCase();
-      return haystack.includes(normalizedQuery);
-    })
-    .sort((a, b) => `${a.category}${a.action}`.localeCompare(`${b.category}${b.action}`, "zh-CN"));
-}
-
-function populateStatsFilters() {
-  const folderValue = refs.statsFolderFilter.value || "all";
-  const categoryValue = refs.statsCategoryFilter.value || "all";
-  const folders = uniqueValues(state.tasks.map((task) => task.folder));
-  refs.statsFolderFilter.innerHTML = buildOptions(["all", ...folders], folderValue, "全部");
-  const categories = state.tasks
-    .filter((task) => folderValue === "all" || task.folder === folderValue)
-    .map((task) => task.category);
-  refs.statsCategoryFilter.innerHTML = buildOptions(["all", ...uniqueValues(categories)], categoryValue, "全部");
-  populateStatsTaskFilter();
-}
-
-function populateStatsTaskFilter() {
-  const folderValue = refs.statsFolderFilter.value || "all";
-  const categoryValue = refs.statsCategoryFilter.value || "all";
-  const currentValue = refs.statsTaskFilter.value || "all";
-  const tasks = state.tasks.filter((task) => {
-    const folderOk = folderValue === "all" || task.folder === folderValue;
-    const categoryOk = categoryValue === "all" || task.category === categoryValue;
-    return folderOk && categoryOk;
-  });
-  refs.statsTaskFilter.innerHTML = `
-    <option value="all"${currentValue === "all" ? " selected" : ""}>全部</option>
-    ${tasks.map((task) => `<option value="${task.id}"${currentValue === task.id ? " selected" : ""}>${escapeHtml(task.action)}</option>`).join("")}
-  `;
-}
-
-function matchesStatsFilter(item) {
-  const task = findTask(item.taskId);
-  if (!task) {
-    return false;
-  }
-  const folderValue = refs.statsFolderFilter.value || "all";
-  const categoryValue = refs.statsCategoryFilter.value || "all";
-  const taskValue = refs.statsTaskFilter.value || "all";
-  return (folderValue === "all" || task.folder === folderValue)
-    && (categoryValue === "all" || task.category === categoryValue)
-    && (taskValue === "all" || task.id === taskValue);
-}
-
-function buildOptions(values, current, allLabel) {
-  return values.map((value) => {
-    const label = value === "all" ? allLabel : value;
-    return `<option value="${escapeAttr(value)}"${value === current ? " selected" : ""}>${escapeHtml(label)}</option>`;
-  }).join("");
-}
-
-function setActiveRangePill() {
-  refs.rangePresets.forEach((button) => {
-    button.classList.toggle("active", button.dataset.range === ui.statsPreset);
+function getEntriesWithinRange(startDate, endDate) {
+  return state.entries.filter((entry) => {
+    const day = dateKey(entry.start);
+    return day >= startDate && day <= endDate;
   });
 }
 
@@ -1389,16 +1494,18 @@ function syncStatsDatesFromPreset(preset) {
     ui.statsEnd = dateKey(today);
     return;
   }
+
   if (preset === "week") {
-    const day = today.getDay() || 7;
+    const weekday = today.getDay() || 7;
     const monday = new Date(today);
-    monday.setDate(today.getDate() - day + 1);
+    monday.setDate(today.getDate() - weekday + 1);
     const sunday = new Date(monday);
     sunday.setDate(monday.getDate() + 6);
     ui.statsStart = dateKey(monday);
     ui.statsEnd = dateKey(sunday);
     return;
   }
+
   if (preset === "month") {
     const start = new Date(today.getFullYear(), today.getMonth(), 1);
     const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
@@ -1406,40 +1513,127 @@ function syncStatsDatesFromPreset(preset) {
     ui.statsEnd = dateKey(end);
     return;
   }
+
   if (!ui.statsStart || !ui.statsEnd) {
     ui.statsStart = dateKey(today);
     ui.statsEnd = dateKey(today);
   }
 }
 
-function getStatsRange() {
+function getPaletteCards() {
+  const cards = THEMES.map((theme) => ({
+    id: theme.id,
+    name: theme.name,
+    note: theme.mood,
+    colors: theme.palette
+  }));
+  if (state.preferences.customPalette.length) {
+    cards.push({
+      id: "custom",
+      name: state.preferences.customPaletteName,
+      note: "用户导入",
+      colors: state.preferences.customPalette
+    });
+  }
+  return cards;
+}
+
+function getTheme(id = state.preferences.themeId) {
+  return THEMES.find((theme) => theme.id === id) || THEMES[0];
+}
+
+function getTaskPaletteColors() {
+  if (state.preferences.paletteId === "custom" && state.preferences.customPalette.length) {
+    return state.preferences.customPalette;
+  }
+  const theme = THEMES.find((item) => item.id === state.preferences.paletteId);
+  return (theme || getTheme()).palette;
+}
+
+function groupTemplates() {
+  const folders = new Map();
+  [...state.tasks]
+    .sort((a, b) => `${a.folder}${a.category}${a.action}`.localeCompare(`${b.folder}${b.category}${b.action}`, "zh-CN"))
+    .forEach((task) => {
+      const folder = folders.get(task.folder) || { folder: task.folder, categories: new Map() };
+      const category = folder.categories.get(task.category) || { name: task.category, tasks: [] };
+      category.tasks.push(task);
+      folder.categories.set(task.category, category);
+      folders.set(task.folder, folder);
+    });
+
+  return [...folders.values()].map((folder) => ({
+    folder: folder.folder,
+    categories: [...folder.categories.values()]
+  }));
+}
+
+function createPlan({ title, taskId, date, startTime, durationMinutes, important }) {
   return {
-    startDate: ui.statsStart || dateKey(new Date()),
-    endDate: ui.statsEnd || dateKey(new Date())
+    id: uid("plan"),
+    title,
+    taskId,
+    date,
+    startTime,
+    durationMinutes: durationMinutes || null,
+    important: Boolean(important),
+    completed: false,
+    createdAt: new Date().toISOString()
   };
 }
 
-function getEntriesForDate(day) {
-  return state.entries.filter((entry) => dateKey(entry.start) === day);
-}
-
-function getEntriesWithinRange(startDate, endDate) {
-  return state.entries.filter((entry) => {
-    const key = dateKey(entry.start);
-    return key >= startDate && key <= endDate;
-  });
-}
-
-function getPlansWithinRange(startDate, endDate) {
-  return state.plans.filter((plan) => plan.date >= startDate && plan.date <= endDate);
-}
-
 function findTask(taskId) {
-  return state.tasks.find((task) => task.id === taskId);
+  return state.tasks.find((task) => task.id === taskId) || null;
 }
 
 function findPlan(planId) {
-  return state.plans.find((plan) => plan.id === planId);
+  return state.plans.find((plan) => plan.id === planId) || null;
+}
+
+function isPlanRunning(plan) {
+  return Boolean(state.activeSession && state.activeSession.planId === plan.id);
+}
+
+function getPlanStatus(plan) {
+  if (isPlanRunning(plan)) {
+    return "running";
+  }
+  if (!plan.startTime) {
+    return "flexible";
+  }
+  if (!plan.completed && timeToMinutes(plan.startTime) < currentMinutes()) {
+    return "overdue";
+  }
+  return "today";
+}
+
+function taskDisplayName(taskId) {
+  const task = findTask(taskId);
+  return task ? task.action : "";
+}
+
+function shortTag(item) {
+  if (!item) {
+    return "未分类";
+  }
+  const task = item.taskId ? findTask(item.taskId) : null;
+  if (task) {
+    return task.category || task.action;
+  }
+  return "临时";
+}
+
+function sessionElapsedMs(session) {
+  return session.segments.reduce((sum, segment) => {
+    const start = new Date(segment.start).getTime();
+    const end = segment.end ? new Date(segment.end).getTime() : nowTick;
+    return sum + Math.max(end - start, 0);
+  }, 0);
+}
+
+function isSessionPaused(session) {
+  const last = session.segments[session.segments.length - 1];
+  return Boolean(session.pausedAt || (last && last.end));
 }
 
 function entryDurationMinutes(entry) {
@@ -1447,115 +1641,128 @@ function entryDurationMinutes(entry) {
 }
 
 function planDurationMinutes(plan) {
-  return Math.max(timeToMinutes(plan.endTime) - timeToMinutes(plan.startTime), 0);
+  if (!plan) {
+    return null;
+  }
+  return parseMinutes(plan.durationMinutes);
 }
 
-function parseHexPalette(input) {
-  const raw = Array.isArray(input) ? input.join(",") : String(input || "");
-  return raw.split(",").map((item) => item.trim().toUpperCase()).filter((item) => /^#([0-9A-F]{6})$/.test(item)).slice(0, 7);
+function createdTime(item) {
+  return new Date(item.createdAt || item.start || 0).getTime();
 }
 
-function formatRepeat(repeat) {
-  return {
-    none: "不循环",
-    daily: "每天",
-    weekdays: "工作日",
-    weekly: "每周固定"
-  }[repeat] || "不循环";
+function deriveDurationMinutes(startTime, endTime) {
+  if (!startTime || !endTime) {
+    return null;
+  }
+  const diff = timeToMinutes(endTime) - timeToMinutes(startTime);
+  return diff > 0 ? diff : null;
+}
+
+function parseMinutes(value) {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number <= 0) {
+    return null;
+  }
+  return Math.round(number);
+}
+
+function timeToMinutes(value) {
+  if (!value || !/^\d{2}:\d{2}$/.test(value)) {
+    return 0;
+  }
+  const [hours, minutes] = value.split(":").map(Number);
+  return hours * 60 + minutes;
+}
+
+function minutesToTime(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+function currentMinutes() {
+  const now = new Date(nowTick);
+  return now.getHours() * 60 + now.getMinutes();
+}
+
+function roundToFive(minutes) {
+  return Math.round(minutes / 5) * 5;
 }
 
 function defaultStartTime() {
-  const now = new Date();
-  now.setMinutes(Math.floor(now.getMinutes() / 10) * 10, 0, 0);
-  return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  return minutesToTime(roundToFive(currentMinutes()));
 }
 
 function defaultEndTime() {
-  const now = new Date();
-  now.setMinutes(now.getMinutes() + 30);
-  return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  return minutesToTime(roundToFive(currentMinutes() + 30));
 }
 
-function formatTimeLabel(value) {
+function dateKey(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function formatTime(value) {
   const date = new Date(value);
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 
 function formatDurationClock(milliseconds) {
-  const seconds = Math.max(Math.floor(milliseconds / 1000), 0);
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remain = seconds % 60;
-  return `${pad(hours)}:${pad(minutes)}:${pad(remain)}`;
+  const totalSeconds = Math.floor(milliseconds / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, "0")).join(":");
 }
 
 function humanizeMinutes(minutes) {
-  if (minutes <= 0) {
-    return "0分";
+  const value = Math.max(Math.round(minutes || 0), 0);
+  if (value < 60) {
+    return `${value}分`;
   }
-  const hours = Math.floor(minutes / 60);
-  const remain = minutes % 60;
-  if (!hours) {
-    return `${remain}分`;
-  }
-  if (!remain) {
-    return `${hours}小时`;
-  }
-  return `${hours}小时${remain}分`;
-}
-
-function enumerateDateKeys(startDate, endDate) {
-  const dates = [];
-  const cursor = new Date(`${startDate}T00:00:00`);
-  const end = new Date(`${endDate}T00:00:00`);
-  while (cursor <= end) {
-    dates.push(dateKey(cursor));
-    cursor.setDate(cursor.getDate() + 1);
-  }
-  return dates;
+  const hours = Math.floor(value / 60);
+  const rest = value % 60;
+  return rest ? `${hours}小时 ${rest}分` : `${hours}小时`;
 }
 
 function weekdayLabel(date) {
   return ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"][date.getDay()];
 }
 
-function formatShortDate(day) {
-  const [, month, date] = day.split("-");
-  return `${Number(month)}/${Number(date)}`;
-}
-
-function timeToMinutes(value) {
-  const [hours, minutes] = value.split(":").map(Number);
-  return hours * 60 + minutes;
-}
-
-function dateKey(value) {
-  const date = new Date(value);
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-}
-
 function uniqueValues(values) {
-  return [...new Set(values.filter(Boolean))];
+  return [...new Set(values)];
+}
+
+function dedupeById(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    if (!item || seen.has(item.id)) {
+      return false;
+    }
+    seen.add(item.id);
+    return true;
+  });
+}
+
+function parseHexPalette(value) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter((item) => /^#?[0-9a-fA-F]{6}$/.test(item))
+    .map((item) => item.startsWith("#") ? item.toUpperCase() : `#${item.toUpperCase()}`);
+}
+
+function renderEmptyState(copy) {
+  return `<div class="empty-state">${escapeHtml(copy)}</div>`;
 }
 
 function uid(prefix) {
-  return `${prefix}_${Math.random().toString(36).slice(2, 9)}_${Date.now().toString(36)}`;
-}
-
-function pad(value) {
-  return String(value).padStart(2, "0");
+  return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
-}
-
-function renderEmptyState(copy) {
-  return `<div class="entry-card"><div class="tiny-copy">${escapeHtml(copy)}</div></div>`;
-}
-
-function renderInlineHint(copy) {
-  return `<span class="tiny-copy">${escapeHtml(copy)}</span>`;
 }
 
 function escapeHtml(value) {
@@ -1563,7 +1770,7 @@ function escapeHtml(value) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll("\"", "&quot;")
+    .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
 

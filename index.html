@@ -7,286 +7,377 @@
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-  <div class="backdrop blob-a"></div>
-  <div class="backdrop blob-b"></div>
-
-  <aside class="active-ribbon hidden" id="active-ribbon">
-    <div class="ribbon-dot" id="active-ribbon-dot"></div>
-    <div class="ribbon-copy">
-      <span class="ribbon-meta" id="active-ribbon-meta">进行中</span>
-      <strong id="active-ribbon-task">做题</strong>
-      <p id="active-ribbon-detail">数学 · 00:18:23</p>
-    </div>
-    <div class="ribbon-actions">
-      <button class="ghost-button" id="set-target-button" type="button">目标</button>
-      <button class="solid-button" id="end-session-button" type="button">结束</button>
-    </div>
-  </aside>
+  <div class="glow glow-a"></div>
+  <div class="glow glow-b"></div>
 
   <div class="app-shell" id="app-shell">
+    <aside class="focus-timer" id="focus-timer" aria-live="polite"></aside>
+
     <main class="views">
-      <section class="view active" data-view="today">
-        <section class="day-banner paper-card">
+      <section class="view active" data-view="home">
+        <header class="home-head">
           <div>
-            <p class="day-label" id="today-label">4月3日 星期五</p>
-            <h1>先把今天排开。</h1>
-            <p class="day-copy">任务、时间和颜色都放在同一张纸上看。</p>
+            <p class="home-date" id="today-label">4月3日 星期五</p>
+            <h1>Today</h1>
           </div>
-          <div class="theme-seal" id="theme-seal">晨雾莫兰迪</div>
-        </section>
+        </header>
 
-        <section class="paper-card search-card">
-          <label class="search-field" for="task-search">
-            <span>🔎</span>
-            <input id="task-search" type="search" placeholder="搜任务，加入今天">
-          </label>
-          <div class="search-suggestions hidden" id="search-suggestions"></div>
-        </section>
-
-        <section class="paper-card flow-card">
-          <div class="panel-head">
+        <section class="panel next-panel">
+          <div class="section-head">
             <div>
-              <h2>今天的任务</h2>
-              <p class="panel-note">按计划时间排序，卡片区最多显示 5 项高度，可滑动看完。</p>
+              <p class="section-kicker">Next</p>
+              <h2>从时间线里抽出最该开始的几件事</h2>
             </div>
-            <button class="text-button" id="open-task-picker-button" type="button">补录</button>
           </div>
-          <div class="plan-flow" id="today-plan-list"></div>
+          <div class="next-track" id="next-track"></div>
+          <div class="page-dots" id="next-dots"></div>
         </section>
 
-        <section class="paper-card chart-card">
-          <div class="chart-topline">
-            <div class="switch-group">
-              <button class="switch-pill active" type="button" data-chart-mode="actual">实际</button>
-              <button class="switch-pill" type="button" data-chart-mode="plan">计划</button>
-            </div>
-            <div class="chart-total" id="today-total">已记录 0分</div>
-          </div>
-
-          <div class="clock-wrap">
-            <div class="clock-face" id="day-pie">
-              <span class="clock-number n12">12</span>
-              <span class="clock-number n3">3</span>
-              <span class="clock-number n6">6</span>
-              <span class="clock-number n9">9</span>
-              <div class="clock-core">
-                <span id="pie-core-label">实际</span>
-                <strong id="pie-core-total">0分</strong>
-              </div>
+        <section class="panel todo-panel">
+          <div class="section-head">
+            <div>
+              <p class="section-kicker">To-Do List</p>
+              <h2>按时间线排今天</h2>
             </div>
           </div>
 
-          <div class="legend-list" id="today-legend"></div>
-          <div class="entry-stream" id="today-timeline"></div>
+          <section class="todo-group hidden" id="overdue-group">
+            <div class="group-head">
+              <h3>⚠️ Overdue</h3>
+            </div>
+            <div class="todo-list" id="overdue-list"></div>
+          </section>
+
+          <section class="todo-group">
+            <div class="group-head">
+              <h3>Today</h3>
+            </div>
+            <div class="todo-list" id="today-list"></div>
+          </section>
+
+          <section class="todo-group">
+            <div class="group-head">
+              <h3>Flexible</h3>
+            </div>
+            <div class="todo-list" id="flexible-list"></div>
+          </section>
         </section>
+
+        <details class="panel completed-panel" id="completed-panel">
+          <summary>
+            <span>已完成</span>
+            <span class="completed-count" id="completed-count">0</span>
+          </summary>
+          <div class="completed-list" id="completed-list"></div>
+        </details>
       </section>
 
       <section class="view" data-view="tasks">
-        <section class="paper-card library-card">
-          <div class="panel-head">
+        <section class="panel library-panel">
+          <div class="section-head">
             <div>
-              <h2>任务库</h2>
-              <p class="panel-note">一级分类像文件夹，点开后再看二级分类和具体任务。</p>
+              <p class="section-kicker">Task Library</p>
+              <h2>用一级 / 二级 / 三级分类管理模板</h2>
             </div>
-            <button class="solid-button" id="new-task-button" type="button">新建任务</button>
+            <button class="pill-button primary" id="open-template-sheet" type="button">新建模板</button>
           </div>
           <div class="task-tree" id="task-tree"></div>
         </section>
       </section>
 
       <section class="view" data-view="stats">
-        <section class="paper-card stats-card">
-          <div class="panel-head">
+        <section class="panel stats-panel">
+          <div class="section-head">
             <div>
-              <h2>统计</h2>
-              <p class="panel-note">看一天、一周、一个月，或者自己框时间范围。</p>
+              <p class="section-kicker">Stats</p>
+              <h2>看最近的时间都流向哪里</h2>
             </div>
           </div>
 
           <div class="preset-row" id="range-presets">
-            <button class="filter-chip active" type="button" data-range="day">今日</button>
-            <button class="filter-chip" type="button" data-range="week">本周</button>
-            <button class="filter-chip" type="button" data-range="month">本月</button>
-            <button class="filter-chip" type="button" data-range="custom">自选</button>
+            <button class="range-pill active" type="button" data-range="day">今日</button>
+            <button class="range-pill" type="button" data-range="week">本周</button>
+            <button class="range-pill" type="button" data-range="month">本月</button>
+            <button class="range-pill" type="button" data-range="custom">自选</button>
           </div>
 
-          <div class="filter-sheet">
+          <div class="stats-range">
             <label>
-              起始
+              开始
               <input id="stats-start-date" type="date">
             </label>
             <label>
               结束
               <input id="stats-end-date" type="date">
             </label>
-            <label>
-              一级分类
-              <select id="stats-folder-filter"></select>
-            </label>
-            <label>
-              二级分类
-              <select id="stats-category-filter"></select>
-            </label>
-            <label>
-              任务
-              <select id="stats-task-filter"></select>
-            </label>
           </div>
 
-          <div class="summary-grid">
-            <article class="summary-card">
-              <span>实际时长</span>
-              <strong id="stats-total-duration">0分</strong>
-            </article>
-            <article class="summary-card">
-              <span>计划时长</span>
-              <strong id="stats-plan-duration">0分</strong>
-            </article>
-            <article class="summary-card">
-              <span>完成度</span>
-              <strong id="stats-completion-rate">0%</strong>
-            </article>
-            <article class="summary-card">
-              <span>活跃天数</span>
-              <strong id="stats-active-days">0天</strong>
-            </article>
-          </div>
-
-          <div class="breakdown-list" id="stats-breakdown"></div>
-          <div class="bar-strip" id="stats-bar-chart"></div>
+          <div class="stats-summary" id="stats-summary"></div>
+          <div class="stats-breakdown" id="stats-breakdown"></div>
         </section>
       </section>
 
       <section class="view" data-view="settings">
-        <section class="paper-card settings-card">
-          <div class="panel-head">
+        <section class="panel settings-panel">
+          <div class="section-head">
             <div>
-              <h2>设置</h2>
-              <p class="panel-note">这里负责主题底色、任务颜色库和自定义导入。</p>
+              <p class="section-kicker">Settings</p>
+              <h2>先选底色，再让一天有自己的颜色</h2>
             </div>
           </div>
 
-          <div class="theme-grid" id="theme-grid"></div>
+          <section class="settings-block">
+            <h3>主题</h3>
+            <div class="theme-grid" id="theme-grid"></div>
+          </section>
 
-          <section class="palette-section">
-            <div class="palette-head">
-              <div>
-                <h3>任务颜色库</h3>
-                <p>任务表单不再用拉条，直接从颜色组里选。</p>
-              </div>
-            </div>
+          <section class="settings-block">
+            <h3>任务颜色库</h3>
             <div class="palette-grid" id="palette-grid"></div>
           </section>
 
-          <section class="custom-section">
-            <div>
-              <h3>导入自定义颜色组</h3>
-              <p>输入 4 到 7 个 HEX，用逗号分隔，例如：#C7B8A3,#8FA8B4,#D9A6A3,#B9C49A</p>
-            </div>
+          <section class="settings-block">
+            <h3>导入自定义颜色组</h3>
+            <p class="helper-copy">输入 4 到 7 个 HEX，用英文逗号隔开。</p>
             <div class="custom-row">
-              <input id="custom-palette-input" type="text" placeholder="#C7B8A3,#8FA8B4,#D9A6A3,#B9C49A">
-              <button class="solid-button" id="save-custom-palette-button" type="button">保存颜色组</button>
+              <input id="custom-palette-input" type="text" placeholder="#AFC7FF,#FFD978,#F6B9A9,#8BC2A2">
+              <button class="pill-button primary" id="save-custom-palette-button" type="button">保存</button>
             </div>
             <div class="custom-preview" id="custom-palette-preview"></div>
-          </section>
-
-          <section class="settings-actions">
-            <button class="ghost-button" id="export-data-button" type="button">导出数据</button>
-            <button class="ghost-button danger-text" id="clear-today-button" type="button">清空今天记录</button>
           </section>
         </section>
       </section>
     </main>
 
+    <button class="fab" id="open-action-sheet" type="button" aria-label="添加">
+      <span>+</span>
+    </button>
+
     <nav class="bottom-nav" aria-label="主导航">
-      <button class="nav-item active" type="button" data-view-target="today">今日</button>
+      <button class="nav-item active" type="button" data-view-target="home">首页</button>
       <button class="nav-item" type="button" data-view-target="tasks">任务</button>
       <button class="nav-item" type="button" data-view-target="stats">统计</button>
       <button class="nav-item" type="button" data-view-target="settings">设置</button>
     </nav>
   </div>
 
-  <div class="modal hidden" id="task-modal">
-    <div class="modal-sheet">
+  <datalist id="task-name-suggestions"></datalist>
+
+  <div class="sheet-layer hidden" id="action-sheet">
+    <div class="sheet-scrim" data-close-sheet="action-sheet"></div>
+    <div class="sheet-panel action-panel">
+      <div class="sheet-handle"></div>
+      <div class="action-grid">
+        <button class="action-card" type="button" data-open-sheet="create-sheet">
+          <strong>Create Task</strong>
+          <span>排进今天的时间线里</span>
+        </button>
+        <button class="action-card" type="button" data-open-sheet="quick-sheet">
+          <strong>Quick Task</strong>
+          <span>不填分类，直接开始</span>
+        </button>
+        <button class="action-card" type="button" data-open-sheet="log-sheet">
+          <strong>Log Time</strong>
+          <span>补录一段已经发生的时间</span>
+        </button>
+        <button class="action-card" type="button" data-open-sheet="start-sheet">
+          <strong>Start Timer</strong>
+          <span>选一个任务，马上进入计时</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet-layer hidden" id="create-sheet">
+    <div class="sheet-scrim" data-close-sheet="create-sheet"></div>
+    <div class="sheet-panel form-panel">
+      <div class="sheet-handle"></div>
       <div class="sheet-head">
         <div>
-          <p class="panel-kicker" id="task-modal-kicker">新建任务</p>
-          <h2 id="task-modal-title">把一个任务放进任务库</h2>
+          <p class="sheet-kicker">Create Task</p>
+          <h2>轻量地加进今天</h2>
         </div>
-        <button class="close-button" type="button" data-close-modal="task-modal">✕</button>
+        <button class="sheet-close" type="button" data-close-sheet="create-sheet">✕</button>
       </div>
 
-      <form id="task-form" class="sheet-form">
+      <form id="create-form" class="line-form">
         <input name="taskId" type="hidden">
-        <label>
-          一级分类（文件夹）
-          <input name="folder" type="text" placeholder="例如：学习">
+        <label class="field-block">
+          <span>Task Name</span>
+          <input name="title" type="text" list="task-name-suggestions" placeholder="例如：数学做题" required>
         </label>
-        <label>
-          二级分类
-          <input name="category" type="text" placeholder="例如：数学" required>
+
+        <button class="select-row" id="create-category-button" type="button">
+          <span>Category</span>
+          <strong id="create-category-value">可选</strong>
+        </button>
+
+        <label class="field-block inline-field">
+          <span>Time (optional)</span>
+          <input name="startTime" type="time">
         </label>
-        <label>
-          三级任务
-          <input name="action" type="text" placeholder="例如：做题" required>
+
+        <label class="field-block inline-field">
+          <span>Duration (optional)</span>
+          <input name="durationMinutes" type="number" min="5" step="5" placeholder="30">
         </label>
-        <label>
-          标签
-          <input name="tags" type="text" placeholder="例如：真题, 函数">
+
+        <label class="toggle-row">
+          <span>⭐ Mark as important</span>
+          <input name="important" type="checkbox">
         </label>
-        <label>
-          循环
-          <select name="repeat">
-            <option value="none">不循环</option>
-            <option value="daily">每天</option>
-            <option value="weekdays">工作日</option>
-            <option value="weekly">每周固定</option>
-          </select>
-        </label>
-        <section>
-          <span class="field-title">任务颜色</span>
-          <div class="swatch-picker" id="task-color-picker"></div>
-          <input name="color" type="hidden">
-        </section>
-        <button class="solid-button submit-button" type="submit">保存任务</button>
+
+        <button class="pill-button primary submit-button" type="submit">Save</button>
       </form>
     </div>
   </div>
 
-  <div class="modal hidden" id="entry-modal">
-    <div class="modal-sheet">
+  <div class="sheet-layer hidden" id="quick-sheet">
+    <div class="sheet-scrim" data-close-sheet="quick-sheet"></div>
+    <div class="sheet-panel form-panel compact-panel">
+      <div class="sheet-handle"></div>
       <div class="sheet-head">
         <div>
-          <p class="panel-kicker" id="entry-modal-kicker">补录</p>
-          <h2 id="entry-modal-title">补录一段实际时间</h2>
+          <p class="sheet-kicker">Quick Task</p>
+          <h2>一秒开始</h2>
         </div>
-        <button class="close-button" type="button" data-close-modal="entry-modal">✕</button>
+        <button class="sheet-close" type="button" data-close-sheet="quick-sheet">✕</button>
       </div>
 
-      <form id="entry-form" class="sheet-form">
+      <form id="quick-form" class="line-form">
+        <label class="field-block">
+          <span>Task Name</span>
+          <input name="title" type="text" list="task-name-suggestions" placeholder="例如：去洗澡" required>
+        </label>
+        <button class="pill-button primary submit-button" type="submit">Start Now</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="sheet-layer hidden" id="log-sheet">
+    <div class="sheet-scrim" data-close-sheet="log-sheet"></div>
+    <div class="sheet-panel form-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker">Log Time</p>
+          <h2>补录一段实际时间</h2>
+        </div>
+        <button class="sheet-close" type="button" data-close-sheet="log-sheet">✕</button>
+      </div>
+
+      <form id="log-form" class="line-form">
         <input name="taskId" type="hidden">
-        <input name="planId" type="hidden">
-        <input name="mode" type="hidden">
-        <div class="task-banner" id="entry-task-banner"></div>
-        <label>
-          日期
+        <label class="field-block">
+          <span>Task</span>
+          <input name="title" type="text" list="task-name-suggestions" placeholder="选择已有任务或新建一个" required>
+        </label>
+
+        <button class="select-row" id="log-category-button" type="button">
+          <span>Category</span>
+          <strong id="log-category-value">可选</strong>
+        </button>
+
+        <label class="field-block inline-field">
+          <span>Date</span>
           <input name="date" type="date" required>
         </label>
-        <div class="time-grid">
-          <label>
-            开始
+
+        <div class="time-range">
+          <label class="field-block">
+            <span>Start</span>
             <input name="startTime" type="time" required>
           </label>
-          <label>
-            结束
+          <label class="field-block">
+            <span>End</span>
             <input name="endTime" type="time" required>
           </label>
         </div>
-        <label class="check-row hidden" id="entry-complete-row">
-          <input name="completed" type="checkbox">
-          <span>同时把这个计划任务标记为完成</span>
+
+        <button class="pill-button primary submit-button" type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="sheet-layer hidden" id="start-sheet">
+    <div class="sheet-scrim" data-close-sheet="start-sheet"></div>
+    <div class="sheet-panel form-panel compact-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker">Start Timer</p>
+          <h2>挑一件事，现在开始</h2>
+        </div>
+        <button class="sheet-close" type="button" data-close-sheet="start-sheet">✕</button>
+      </div>
+
+      <form id="start-form" class="line-form">
+        <input name="taskId" type="hidden">
+        <label class="field-block">
+          <span>Task</span>
+          <input name="title" type="text" list="task-name-suggestions" placeholder="例如：英语听力" required>
         </label>
-        <button class="solid-button submit-button" type="submit">保存</button>
+
+        <button class="select-row" id="start-category-button" type="button">
+          <span>Category</span>
+          <strong id="start-category-value">可选</strong>
+        </button>
+
+        <button class="pill-button primary submit-button" type="submit">Start Now</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="sheet-layer hidden" id="category-sheet">
+    <div class="sheet-scrim" data-close-sheet="category-sheet"></div>
+    <div class="sheet-panel category-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker">Categories</p>
+          <h2>一级 > 二级 > 三级</h2>
+        </div>
+        <button class="sheet-close" type="button" data-close-sheet="category-sheet">✕</button>
+      </div>
+
+      <div class="category-toolbar">
+        <button class="text-link" id="category-back-button" type="button">返回上一级</button>
+        <button class="text-link" id="category-clear-button" type="button">不设置分类</button>
+      </div>
+
+      <div class="category-path" id="category-path">还没有选择分类</div>
+      <div class="category-list" id="category-list"></div>
+    </div>
+  </div>
+
+  <div class="sheet-layer hidden" id="template-sheet">
+    <div class="sheet-scrim" data-close-sheet="template-sheet"></div>
+    <div class="sheet-panel form-panel">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <div>
+          <p class="sheet-kicker" id="template-sheet-kicker">Task Template</p>
+          <h2 id="template-sheet-title">新建一个分类模板</h2>
+        </div>
+        <button class="sheet-close" type="button" data-close-sheet="template-sheet">✕</button>
+      </div>
+
+      <form id="template-form" class="line-form">
+        <input name="templateId" type="hidden">
+        <label class="field-block">
+          <span>一级分类</span>
+          <input name="folder" type="text" placeholder="例如：学习" required>
+        </label>
+        <label class="field-block">
+          <span>二级分类</span>
+          <input name="category" type="text" placeholder="例如：数学" required>
+        </label>
+        <label class="field-block">
+          <span>三级分类</span>
+          <input name="action" type="text" placeholder="例如：做题" required>
+        </label>
+        <div class="palette-picker" id="template-color-picker"></div>
+        <button class="pill-button primary submit-button" type="submit">保存模板</button>
       </form>
     </div>
   </div>
