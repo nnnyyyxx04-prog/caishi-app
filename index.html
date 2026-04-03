@@ -190,8 +190,8 @@
 
   <div class="sheet-layer hidden" id="create-sheet">
     <div class="sheet-scrim" data-close-sheet="create-sheet"></div>
-    <div class="sheet-panel form-panel">
-      <div class="sheet-handle"></div>
+    <div class="sheet-panel form-panel expandable-sheet" id="create-sheet-panel">
+      <button class="sheet-handle drag-handle" id="create-sheet-handle" type="button" aria-label="展开创建任务面板"></button>
       <div class="sheet-head">
         <div>
           <p class="sheet-kicker">Create Task</p>
@@ -221,6 +221,11 @@
           <span>Duration (optional)</span>
           <input name="durationMinutes" type="number" min="5" step="5" placeholder="30">
         </label>
+
+        <section class="field-block color-field">
+          <span>Color</span>
+          <div class="palette-picker compact-picker" id="create-color-picker"></div>
+        </section>
 
         <label class="toggle-row">
           <span>⭐ Mark as important</span>

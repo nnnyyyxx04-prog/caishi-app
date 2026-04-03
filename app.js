@@ -125,7 +125,8 @@ const ui = {
   categoryStep: "folder",
   categoryFolder: "",
   categoryCategory: "",
-  returnSheetId: "create-sheet"
+  returnSheetId: "create-sheet",
+  createSheetExpanded: false
 };
 
 const refs = {
@@ -155,11 +156,14 @@ const refs = {
   taskNameSuggestions: document.querySelector("#task-name-suggestions"),
   openActionSheet: document.querySelector("#open-action-sheet"),
   openTemplateSheet: document.querySelector("#open-template-sheet"),
+  createSheetPanel: document.querySelector("#create-sheet-panel"),
+  createSheetHandle: document.querySelector("#create-sheet-handle"),
   createForm: document.querySelector("#create-form"),
   quickForm: document.querySelector("#quick-form"),
   logForm: document.querySelector("#log-form"),
   startForm: document.querySelector("#start-form"),
   templateForm: document.querySelector("#template-form"),
+  createColorPicker: document.querySelector("#create-color-picker"),
   createCategoryValue: document.querySelector("#create-category-value"),
   logCategoryValue: document.querySelector("#log-category-value"),
   startCategoryValue: document.querySelector("#start-category-value"),
@@ -216,13 +220,18 @@ function bindEvents() {
   refs.categoryList.addEventListener("click", handleCategoryListClick);
 
   refs.createForm.addEventListener("submit", handleCreateSubmit);
+  refs.createColorPicker.addEventListener("click", handleCreateColorClick);
   refs.quickForm.addEventListener("submit", handleQuickSubmit);
   refs.logForm.addEventListener("submit", handleLogSubmit);
   refs.startForm.addEventListener("submit", handleStartSubmit);
   refs.templateForm.addEventListener("submit", handleTemplateSubmit);
   refs.templateColorPicker.addEventListener("click", handleTemplateColorClick);
+  refs.createSheetHandle.addEventListener("click", () => setCreateSheetExpanded(!ui.createSheetExpanded));
+  refs.createSheetHandle.addEventListener("pointerdown", handleCreateSheetDragStart);
+  refs.createForm.addEventListener("focusin", () => setCreateSheetExpanded(true));
 
   refs.nextTrack.addEventListener("click", handleTodoAction);
+  refs.nextTrack.addEventListener("scroll", syncNextDots);
   refs.overdueList.addEventListener("click", handleTodoAction);
   refs.todayList.addEventListener("click", handleTodoAction);
   refs.flexibleList.addEventListener("click", handleTodoAction);
@@ -318,6 +327,7 @@ function normalizePlans(plans) {
       date: String(plan.date || dateKey(new Date())),
       startTime,
       durationMinutes: derivedDuration,
+      color: String(plan.color || ""),
       important: Boolean(plan.important),
       completed: Boolean(plan.completed),
       createdAt: String(plan.createdAt || new Date().toISOString())
@@ -334,6 +344,7 @@ function normalizeEntries(entries) {
     title: String(entry.title || ""),
     taskId: entry.taskId ? String(entry.taskId) : "",
     planId: entry.planId ? String(entry.planId) : "",
+    color: String(entry.color || ""),
     start: entry.start || new Date().toISOString(),
     end: entry.end || new Date().toISOString(),
     source: String(entry.source || "manual")
@@ -349,6 +360,7 @@ function normalizeActiveSession(session) {
       title: String(session.title || ""),
       taskId: session.taskId ? String(session.taskId) : "",
       planId: session.planId ? String(session.planId) : "",
+      color: String(session.color || ""),
       pausedAt: session.pausedAt || null,
       segments: session.segments.map((segment) => ({
         start: segment.start,
@@ -361,6 +373,7 @@ function normalizeActiveSession(session) {
       title: String(session.title || ""),
       taskId: session.taskId ? String(session.taskId) : "",
       planId: session.planId ? String(session.planId) : "",
+      color: String(session.color || ""),
       pausedAt: null,
       segments: [{ start: session.start, end: null }]
     };
@@ -489,12 +502,14 @@ function renderFocusTimer() {
   const session = state.activeSession;
   if (!session) {
     refs.focusTimer.classList.add("idle");
+    refs.focusTimer.style.removeProperty("--task-color");
     refs.focusTimer.innerHTML = `
-      <div class="timer-row">
-        <div class="timer-copy">
-          <span>固定计时器</span>
-          <strong>还没有正在进行的任务</strong>
+      <div class="timer-row primary">
+        <div class="timer-inline-copy">
+          <span class="timer-kicker">Now</span>
+          <span class="timer-title">还没有正在进行的任务</span>
         </div>
+        <div class="timer-clock">00:00:00</div>
         <div class="timer-actions">
           <button class="timer-button" type="button" data-open-sheet="start-sheet">Start</button>
         </div>
@@ -512,20 +527,15 @@ function renderFocusTimer() {
   const progress = plannedMinutes ? clamp(elapsedMs / (plannedMinutes * 60 * 1000), 0, 1) : 0.38;
   const status = isSessionPaused(session) ? "Paused" : "Now";
   const secondary = linkedTask ? linkedTask.category : "临时任务";
+  refs.focusTimer.style.setProperty("--task-color", getItemColor(session));
 
   refs.focusTimer.innerHTML = `
-    <div class="timer-row">
-      <div class="timer-copy">
-        <span>${status} · ${escapeHtml(secondary)}</span>
-        <strong>${escapeHtml(session.title)}</strong>
+    <div class="timer-row primary">
+      <div class="timer-inline-copy">
+        <span class="timer-kicker">${status}</span>
+        <span class="timer-title">${escapeHtml(session.title)}</span>
       </div>
       <div class="timer-clock">${formatDurationClock(elapsedMs)}</div>
-    </div>
-    <div class="timer-progress" style="--progress:${progress.toFixed(3)}"></div>
-    <div class="timer-row">
-      <div class="timer-copy">
-        <span>${plannedMinutes ? `目标 ${humanizeMinutes(plannedMinutes)}` : "没有预设时长"}</span>
-      </div>
       <div class="timer-actions">
         <button class="timer-button" type="button" data-pause-session="${isSessionPaused(session) ? "resume" : "pause"}">
           ${isSessionPaused(session) ? "继续" : "暂停"}
@@ -533,6 +543,12 @@ function renderFocusTimer() {
         <button class="stop-button" type="button" data-stop-session="true">结束</button>
       </div>
     </div>
+    <div class="timer-row">
+      <div class="timer-copy">
+        <span>${escapeHtml(secondary)} · ${plannedMinutes ? `目标 ${humanizeMinutes(plannedMinutes)}` : "没有预设时长"}</span>
+      </div>
+    </div>
+    <div class="timer-progress" style="--progress:${progress.toFixed(3)}"></div>
   `;
 }
 
@@ -547,6 +563,7 @@ function renderHome() {
   refs.nextDots.innerHTML = nextItems.length
     ? nextItems.map((_, index) => `<span class="${index === 0 ? "active" : ""}"></span>`).join("")
     : "";
+  syncNextDots();
 
   refs.overdueGroup.classList.toggle("hidden", !buckets.overdue.length);
   refs.overdueList.innerHTML = renderTodoList(buckets.overdue, "overdue");
@@ -580,9 +597,10 @@ function renderNextCard(plan) {
   const tag = shortTag(plan);
   const extra = plan.important ? '<span class="status-chip">⭐ Important</span>' : "";
   const actionLabel = isPlanRunning(plan) ? "继续看" : "Start";
+  const color = getItemColor(plan);
 
   return `
-    <article class="next-card status-${status}">
+    <article class="next-card status-${status}" style="${buildNextCardStyle(color)}">
       <div class="next-topline">
         <span class="next-time">${escapeHtml(timeLabel)}</span>
         ${extra}
@@ -736,7 +754,7 @@ function renderStatsBreakdown(entries) {
     const current = groups.get(key) || {
       label: entry.title,
       note: task ? `${task.folder} / ${task.category} / ${task.action}` : "临时记录",
-      color: task?.color || getTaskPaletteColors()[0] || "#AFC7FF",
+      color: getItemColor(entry),
       minutes: 0
     };
     current.minutes += entryDurationMinutes(entry);
@@ -833,6 +851,9 @@ function openSheet(id) {
   if (layer) {
     layer.classList.remove("hidden");
   }
+  if (id === "create-sheet") {
+    window.setTimeout(() => setCreateSheetExpanded(false), 0);
+  }
 }
 
 function closeSheet(id) {
@@ -840,12 +861,18 @@ function closeSheet(id) {
   if (layer) {
     layer.classList.add("hidden");
   }
+  if (id === "create-sheet") {
+    setCreateSheetExpanded(false);
+  }
 }
 
 function resetCreateForm() {
   refs.createForm.reset();
   refs.createForm.elements.taskId.value = "";
   refs.createCategoryValue.textContent = "可选";
+  const defaultColor = getTaskPaletteColors()[0] || "#AFC7FF";
+  refs.createForm.dataset.selectedColor = defaultColor;
+  renderCreateColorPicker(defaultColor);
 }
 
 function resetLogForm() {
@@ -970,10 +997,57 @@ function applyCategorySelection(taskId) {
     if (task && !targetForm.elements.title.value.trim()) {
       targetForm.elements.title.value = task.action;
     }
+    if (task && ui.categoryTarget === "create") {
+      refs.createForm.dataset.selectedColor = task.color;
+      renderCreateColorPicker(task.color);
+    }
   }
 
   closeSheet("category-sheet");
   openSheet(ui.returnSheetId);
+}
+
+function renderCreateColorPicker(selectedColor) {
+  refs.createColorPicker.innerHTML = getTaskPaletteColors().map((color) => `
+    <button class="palette-button ${selectedColor === color ? "active" : ""}" type="button" style="--swatch-color:${color}" data-create-color="${color}"></button>
+  `).join("");
+}
+
+function handleCreateColorClick(event) {
+  const button = event.target.closest("[data-create-color]");
+  if (!button) {
+    return;
+  }
+  refs.createForm.dataset.selectedColor = button.dataset.createColor;
+  renderCreateColorPicker(button.dataset.createColor);
+}
+
+function setCreateSheetExpanded(expanded) {
+  ui.createSheetExpanded = expanded;
+  refs.createSheetPanel.classList.toggle("expanded", expanded);
+}
+
+function handleCreateSheetDragStart(event) {
+  const startY = event.clientY;
+  const startExpanded = ui.createSheetExpanded;
+
+  const handleMove = (moveEvent) => {
+    const deltaY = moveEvent.clientY - startY;
+    if (deltaY < -40 && !startExpanded) {
+      setCreateSheetExpanded(true);
+    }
+    if (deltaY > 40 && startExpanded) {
+      setCreateSheetExpanded(false);
+    }
+  };
+
+  const handleUp = () => {
+    window.removeEventListener("pointermove", handleMove);
+    window.removeEventListener("pointerup", handleUp);
+  };
+
+  window.addEventListener("pointermove", handleMove);
+  window.addEventListener("pointerup", handleUp);
 }
 
 function handleCreateSubmit(event) {
@@ -990,6 +1064,7 @@ function handleCreateSubmit(event) {
     date: dateKey(new Date()),
     startTime: String(formData.get("startTime") || ""),
     durationMinutes: parseMinutes(formData.get("durationMinutes")),
+    color: refs.createForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF",
     important: Boolean(formData.get("important"))
   }));
 
@@ -1012,6 +1087,7 @@ function handleQuickSubmit(event) {
     date: dateKey(new Date()),
     startTime: "",
     durationMinutes: null,
+    color: getTaskPaletteColors()[0] || "#AFC7FF",
     important: false
   });
 
@@ -1019,7 +1095,8 @@ function handleQuickSubmit(event) {
   startSession({
     title: plan.title,
     taskId: plan.taskId,
-    planId: plan.id
+    planId: plan.id,
+    color: plan.color
   });
 
   closeSheet("quick-sheet");
@@ -1042,6 +1119,7 @@ function handleLogSubmit(event) {
     title,
     taskId: String(formData.get("taskId") || ""),
     planId: "",
+    color: getTaskColorByTaskId(String(formData.get("taskId") || "")),
     start: `${date}T${startTime}:00`,
     end: `${date}T${endTime}:00`,
     source: "manual"
@@ -1066,6 +1144,7 @@ function handleStartSubmit(event) {
     date: dateKey(new Date()),
     startTime: "",
     durationMinutes: null,
+    color: getTaskColorByTaskId(String(formData.get("taskId") || "")),
     important: false
   });
 
@@ -1073,7 +1152,8 @@ function handleStartSubmit(event) {
   startSession({
     title: plan.title,
     taskId: plan.taskId,
-    planId: plan.id
+    planId: plan.id,
+    color: plan.color
   });
 
   closeSheet("start-sheet");
@@ -1168,6 +1248,23 @@ function handleTodoAction(event) {
   }
 }
 
+function syncNextDots() {
+  const dots = refs.nextDots.querySelectorAll("span");
+  if (!dots.length) {
+    return;
+  }
+  const card = refs.nextTrack.querySelector(".next-card");
+  const width = card?.offsetWidth || refs.nextTrack.clientWidth || 1;
+  const gap = 12;
+  const index = Math.min(
+    dots.length - 1,
+    Math.max(0, Math.round(refs.nextTrack.scrollLeft / (width + gap)))
+  );
+  dots.forEach((dot, dotIndex) => {
+    dot.classList.toggle("active", dotIndex === index);
+  });
+}
+
 function handleFocusTimerActions(event) {
   const openSheetButton = event.target.closest("[data-open-sheet]");
   if (openSheetButton) {
@@ -1250,12 +1347,13 @@ function startPlan(planId) {
   startSession({
     title: plan.title,
     taskId: plan.taskId,
-    planId: plan.id
+    planId: plan.id,
+    color: getItemColor(plan)
   });
   renderAll();
 }
 
-function startSession({ title, taskId = "", planId = "" }) {
+function startSession({ title, taskId = "", planId = "", color = "" }) {
   if (state.activeSession) {
     stopSession(false);
   }
@@ -1264,6 +1362,7 @@ function startSession({ title, taskId = "", planId = "" }) {
     title,
     taskId,
     planId,
+    color,
     pausedAt: null,
     segments: [{ start: new Date().toISOString(), end: null }]
   };
@@ -1306,6 +1405,7 @@ function stopSession(shouldRender = true) {
       title: session.title,
       taskId: session.taskId,
       planId: session.planId,
+      color: getItemColor(session),
       start: segment.start,
       end: segment.end,
       source: "timer"
@@ -1568,7 +1668,7 @@ function groupTemplates() {
   }));
 }
 
-function createPlan({ title, taskId, date, startTime, durationMinutes, important }) {
+function createPlan({ title, taskId, date, startTime, durationMinutes, important, color = "" }) {
   return {
     id: uid("plan"),
     title,
@@ -1576,6 +1676,7 @@ function createPlan({ title, taskId, date, startTime, durationMinutes, important
     date,
     startTime,
     durationMinutes: durationMinutes || null,
+    color,
     important: Boolean(important),
     completed: false,
     createdAt: new Date().toISOString()
@@ -1621,6 +1722,30 @@ function shortTag(item) {
     return task.category || task.action;
   }
   return "临时";
+}
+
+function getTaskColorByTaskId(taskId) {
+  const task = findTask(taskId);
+  return task?.color || "";
+}
+
+function getItemColor(item) {
+  if (!item) {
+    return getTaskPaletteColors()[0] || "#AFC7FF";
+  }
+  if (item.color) {
+    return item.color;
+  }
+  if (item.taskId) {
+    return getTaskColorByTaskId(item.taskId) || getTaskPaletteColors()[0] || "#AFC7FF";
+  }
+  return getTaskPaletteColors()[0] || "#AFC7FF";
+}
+
+function buildNextCardStyle(color) {
+  const strong = hexToRgba(color, 0.24);
+  const soft = hexToRgba(color, 0.12);
+  return `background:linear-gradient(135deg, ${strong}, ${soft});border-color:${hexToRgba(color, 0.22)};`;
 }
 
 function sessionElapsedMs(session) {
@@ -1751,6 +1876,17 @@ function parseHexPalette(value) {
     .map((item) => item.trim())
     .filter((item) => /^#?[0-9a-fA-F]{6}$/.test(item))
     .map((item) => item.startsWith("#") ? item.toUpperCase() : `#${item.toUpperCase()}`);
+}
+
+function hexToRgba(hex, alpha) {
+  const normalized = String(hex || "").replace("#", "");
+  if (!/^[0-9a-fA-F]{6}$/.test(normalized)) {
+    return `rgba(175, 199, 255, ${alpha})`;
+  }
+  const red = Number.parseInt(normalized.slice(0, 2), 16);
+  const green = Number.parseInt(normalized.slice(2, 4), 16);
+  const blue = Number.parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
 }
 
 function renderEmptyState(copy) {
