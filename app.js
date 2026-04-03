@@ -5,7 +5,7 @@ const THEMES = [
   {
     id: "powder-blue",
     name: "奶油蓝晨",
-    mood: "像参考图那种轻软蓝白调",
+    mood: "像参考图那种柔和的蓝白色，适合做首页主视觉",
     background: ["#f6f1eb", "#efe8df"],
     surface: "rgba(255, 251, 246, 0.92)",
     surfaceStrong: "rgba(255, 253, 250, 0.98)",
@@ -24,7 +24,7 @@ const THEMES = [
   {
     id: "morandi-paper",
     name: "雾纸莫兰迪",
-    mood: "低饱和、软纸感、适合长时间看",
+    mood: "浣庨ケ鍜屻€佽蒋绾告劅銆侀€傚悎闀挎椂闂寸湅",
     background: ["#f2ebe4", "#e7ddd2"],
     surface: "rgba(255, 250, 245, 0.92)",
     surfaceStrong: "rgba(255, 252, 248, 0.98)",
@@ -42,8 +42,8 @@ const THEMES = [
   },
   {
     id: "adventure-candy",
-    name: "探险糖果",
-    mood: "参考探险活宝，但降了一点饱和",
+    name: "鎺㈤櫓绯栨灉",
+    mood: "参考探险活宝，但降低了一点饱和度，更适合长时间使用",
     background: ["#f4efe7", "#e4ecf4"],
     surface: "rgba(255, 252, 247, 0.92)",
     surfaceStrong: "rgba(255, 255, 252, 0.98)",
@@ -61,8 +61,8 @@ const THEMES = [
   },
   {
     id: "sunset-room",
-    name: "落日房间",
-    mood: "更暖一点，像傍晚写字台",
+    name: "钀芥棩鎴块棿",
+    mood: "鏇存殩涓€鐐癸紝鍍忓倣鏅氬啓瀛楀彴",
     background: ["#f5eee6", "#ecdacb"],
     surface: "rgba(255, 250, 244, 0.92)",
     surfaceStrong: "rgba(255, 252, 248, 0.98)",
@@ -80,6 +80,22 @@ const THEMES = [
   }
 ];
 
+const TEXT_REPAIRS = new Map([
+  ["瀛︿範", "学习"],
+  ["鐢熸椿", "生活"],
+  ["鏁板", "数学"],
+  ["璇枃", "语文"],
+  ["璧峰眳", "起居"],
+  ["鍋氶", "做题"],
+  ["澶嶀範", "复习"],
+  ["闃呰", "阅读"],
+  ["娲楁尽", "洗澡"],
+  ["鏁板鍋氶", "数学做题"],
+  ["鏁板澶嶀範", "数学复习"],
+  ["璇枃闃呰", "语文阅读"],
+  ["濉啓闂嵎", "填写问卷"]
+]);
+
 const DEFAULT_TEMPLATES = [
   {
     id: "task_math_practice",
@@ -87,6 +103,7 @@ const DEFAULT_TEMPLATES = [
     category: "数学",
     action: "做题",
     color: "#7FA3FF",
+    defaultDurationMinutes: 60,
     createdAt: "2026-04-02T09:00:00"
   },
   {
@@ -95,6 +112,7 @@ const DEFAULT_TEMPLATES = [
     category: "数学",
     action: "复习",
     color: "#AFC7FF",
+    defaultDurationMinutes: 45,
     createdAt: "2026-04-02T09:05:00"
   },
   {
@@ -103,6 +121,7 @@ const DEFAULT_TEMPLATES = [
     category: "语文",
     action: "阅读",
     color: "#FFD978",
+    defaultDurationMinutes: 30,
     createdAt: "2026-04-02T09:10:00"
   },
   {
@@ -111,6 +130,7 @@ const DEFAULT_TEMPLATES = [
     category: "起居",
     action: "洗澡",
     color: "#F6B9A9",
+    defaultDurationMinutes: 20,
     createdAt: "2026-04-02T09:15:00"
   }
 ];
@@ -118,15 +138,22 @@ const DEFAULT_TEMPLATES = [
 const state = loadState();
 const ui = {
   activeView: "home",
-  statsPreset: "week",
+  statsPreset: "day",
   statsStart: "",
   statsEnd: "",
+  statsMode: "category",
+  statsSelectedKey: "",
   categoryTarget: "create",
   categoryStep: "folder",
   categoryFolder: "",
   categoryCategory: "",
   returnSheetId: "create-sheet",
-  createSheetExpanded: false
+  createSheetExpanded: false,
+  taskEditMode: false,
+  focusTaskId: "",
+  focusCategoryKey: "",
+  focusFolderName: "",
+  homeMenuPlanId: ""
 };
 
 const refs = {
@@ -141,16 +168,20 @@ const refs = {
   completedCount: document.querySelector("#completed-count"),
   completedList: document.querySelector("#completed-list"),
   taskTree: document.querySelector("#task-tree"),
-  statsSummary: document.querySelector("#stats-summary"),
-  statsBreakdown: document.querySelector("#stats-breakdown"),
+  statsDonutWrap: document.querySelector("#stats-donut-wrap"),
+  statsDonut: document.querySelector("#stats-donut"),
+  statsTotalDuration: document.querySelector("#stats-total-duration"),
+  statsTotalLabel: document.querySelector("#stats-total-label"),
+  statsCallout: document.querySelector("#stats-callout"),
   rangeButtons: document.querySelectorAll("[data-range]"),
+  statsModeButtons: document.querySelectorAll("[data-stats-mode]"),
   statsStartDate: document.querySelector("#stats-start-date"),
   statsEndDate: document.querySelector("#stats-end-date"),
-  themeGrid: document.querySelector("#theme-grid"),
-  paletteGrid: document.querySelector("#palette-grid"),
-  customPaletteInput: document.querySelector("#custom-palette-input"),
-  customPalettePreview: document.querySelector("#custom-palette-preview"),
-  saveCustomPaletteButton: document.querySelector("#save-custom-palette-button"),
+  statsCustomRange: document.querySelector("#stats-custom-range"),
+  statsCategoryFilter: document.querySelector("#stats-category-filter"),
+  statsTaskFilter: document.querySelector("#stats-task-filter"),
+  statsDetailList: document.querySelector("#stats-detail-list"),
+  statsTrendChart: document.querySelector("#stats-trend-chart"),
   navItems: document.querySelectorAll(".nav-item"),
   views: document.querySelectorAll(".view"),
   taskNameSuggestions: document.querySelector("#task-name-suggestions"),
@@ -174,15 +205,20 @@ const refs = {
   categoryList: document.querySelector("#category-list"),
   categoryBackButton: document.querySelector("#category-back-button"),
   categoryClearButton: document.querySelector("#category-clear-button"),
+  toggleTaskEdit: document.querySelector("#toggle-task-edit"),
   templateColorPicker: document.querySelector("#template-color-picker"),
   templateSheetKicker: document.querySelector("#template-sheet-kicker"),
-  templateSheetTitle: document.querySelector("#template-sheet-title")
+  templateSheetTitle: document.querySelector("#template-sheet-title"),
+  homeTaskSheetTitle: document.querySelector("#home-task-sheet-title"),
+  homeTaskEditButton: document.querySelector("#home-task-edit-button"),
+  homeTaskCategoryButton: document.querySelector("#home-task-category-button")
 };
 
 let nowTick = Date.now();
 
 hydrateState();
 ensureStarterData();
+syncCategoryColors();
 syncStatsDatesFromPreset(ui.statsPreset);
 bindEvents();
 renderAll();
@@ -235,8 +271,15 @@ function bindEvents() {
   refs.overdueList.addEventListener("click", handleTodoAction);
   refs.todayList.addEventListener("click", handleTodoAction);
   refs.flexibleList.addEventListener("click", handleTodoAction);
+  bindHomeLongPress(refs.nextTrack);
+  bindHomeLongPress(refs.overdueList);
+  bindHomeLongPress(refs.todayList);
+  bindHomeLongPress(refs.flexibleList);
   refs.focusTimer.addEventListener("click", handleFocusTimerActions);
   refs.taskTree.addEventListener("click", handleTaskTreeActions);
+  refs.toggleTaskEdit.addEventListener("click", toggleTaskEditMode);
+  refs.homeTaskEditButton.addEventListener("click", jumpFromHomeTaskMenuToEdit);
+  refs.homeTaskCategoryButton.addEventListener("click", jumpFromHomeTaskMenuToCategory);
 
   refs.rangeButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -245,6 +288,28 @@ function bindEvents() {
       renderStats();
     });
   });
+
+  refs.statsModeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      ui.statsMode = button.dataset.statsMode;
+      ui.statsSelectedKey = "";
+      renderStats();
+    });
+  });
+
+  refs.statsCategoryFilter.addEventListener("change", () => {
+    populateStatsTaskFilter();
+    ui.statsSelectedKey = "";
+    renderStats();
+  });
+
+  refs.statsTaskFilter.addEventListener("change", () => {
+    ui.statsSelectedKey = "";
+    renderStats();
+  });
+
+  refs.statsDetailList.addEventListener("click", handleStatsDetailClick);
+  refs.statsDonut.addEventListener("click", handleStatsDonutClick);
 
   refs.statsStartDate.addEventListener("change", () => {
     ui.statsPreset = "custom";
@@ -258,9 +323,6 @@ function bindEvents() {
     renderStats();
   });
 
-  refs.themeGrid.addEventListener("click", handleThemeClick);
-  refs.paletteGrid.addEventListener("click", handlePaletteClick);
-  refs.saveCustomPaletteButton.addEventListener("click", saveCustomPalette);
 }
 
 function loadState() {
@@ -303,10 +365,11 @@ function normalizeTasks(tasks) {
   }
   return tasks.map((task, index) => ({
     id: String(task.id || `task_${index}`),
-    folder: String(task.folder || task.project || "未分类"),
-    category: String(task.category || task.group || "未分类"),
-    action: String(task.action || task.title || "未命名"),
+    folder: repairKnownText(String(task.folder || task.project || "未分类")),
+    category: repairKnownText(String(task.category || task.group || "未分类")),
+    action: repairKnownText(String(task.action || task.title || "未命名")),
     color: String(task.color || "#AFC7FF"),
+    defaultDurationMinutes: parseMinutes(task.defaultDurationMinutes),
     createdAt: task.createdAt || new Date().toISOString()
   }));
 }
@@ -322,7 +385,7 @@ function normalizePlans(plans) {
     const derivedDuration = durationMinutes || deriveDurationMinutes(startTime, endTime);
     return {
       id: String(plan.id || `plan_${index}`),
-      title: String(plan.title || plan.name || ""),
+      title: repairKnownText(String(plan.title || plan.name || "")),
       taskId: plan.taskId ? String(plan.taskId) : "",
       date: String(plan.date || dateKey(new Date())),
       startTime,
@@ -341,7 +404,7 @@ function normalizeEntries(entries) {
   }
   return entries.map((entry, index) => ({
     id: String(entry.id || `entry_${index}`),
-    title: String(entry.title || ""),
+    title: repairKnownText(String(entry.title || "")),
     taskId: entry.taskId ? String(entry.taskId) : "",
     planId: entry.planId ? String(entry.planId) : "",
     color: String(entry.color || ""),
@@ -357,7 +420,7 @@ function normalizeActiveSession(session) {
   }
   if (Array.isArray(session.segments) && session.segments.length) {
     return {
-      title: String(session.title || ""),
+      title: repairKnownText(String(session.title || "")),
       taskId: session.taskId ? String(session.taskId) : "",
       planId: session.planId ? String(session.planId) : "",
       color: String(session.color || ""),
@@ -370,7 +433,7 @@ function normalizeActiveSession(session) {
   }
   if (session.start) {
     return {
-      title: String(session.title || ""),
+      title: repairKnownText(String(session.title || "")),
       taskId: session.taskId ? String(session.taskId) : "",
       planId: session.planId ? String(session.planId) : "",
       color: String(session.color || ""),
@@ -460,7 +523,6 @@ function renderAll() {
   renderHome();
   renderTaskLibrary();
   renderStats();
-  renderSettings();
   switchView(ui.activeView, true);
 }
 
@@ -483,7 +545,7 @@ function applyTheme(theme) {
 
 function renderTodayLabel() {
   const now = new Date();
-  refs.todayLabel.textContent = `${now.getMonth() + 1}月${now.getDate()}日 ${weekdayLabel(now)}`;
+  refs.todayLabel.textContent = `${now.getMonth() + 1}月${now.getDate()}日 · ${weekdayLabel(now)}`;
 }
 
 function renderSuggestionList() {
@@ -527,13 +589,14 @@ function renderFocusTimer() {
   const progress = plannedMinutes ? clamp(elapsedMs / (plannedMinutes * 60 * 1000), 0, 1) : 0.38;
   const status = isSessionPaused(session) ? "Paused" : "Now";
   const secondary = linkedTask ? linkedTask.category : "临时任务";
+  const title = linkedTask ? linkedTask.action : session.title;
   refs.focusTimer.style.setProperty("--task-color", getItemColor(session));
 
   refs.focusTimer.innerHTML = `
     <div class="timer-row primary">
       <div class="timer-inline-copy">
         <span class="timer-kicker">${status}</span>
-        <span class="timer-title">${escapeHtml(session.title)}</span>
+        <span class="timer-title">${escapeHtml(title)}</span>
       </div>
       <div class="timer-clock">${formatDurationClock(elapsedMs)}</div>
       <div class="timer-actions">
@@ -545,7 +608,7 @@ function renderFocusTimer() {
     </div>
     <div class="timer-row">
       <div class="timer-copy">
-        <span>${escapeHtml(secondary)} · ${plannedMinutes ? `目标 ${humanizeMinutes(plannedMinutes)}` : "没有预设时长"}</span>
+          <span>${escapeHtml(secondary)} · ${plannedMinutes ? `目标 ${humanizeMinutes(plannedMinutes)}` : "没有预设时长"}</span>
       </div>
     </div>
     <div class="timer-progress" style="--progress:${progress.toFixed(3)}"></div>
@@ -595,18 +658,19 @@ function renderNextCard(plan) {
   const task = plan.taskId ? findTask(plan.taskId) : null;
   const timeLabel = plan.startTime || "Flexible";
   const tag = shortTag(plan);
-  const extra = plan.important ? '<span class="status-chip">⭐ Important</span>' : "";
-  const actionLabel = isPlanRunning(plan) ? "继续看" : "Start";
+  const extra = plan.important ? '<span class="status-chip">猸?Important</span>' : "";
+  const actionLabel = isPlanRunning(plan) ? "继续" : "Start";
   const color = getItemColor(plan);
+  const title = task ? task.action : plan.title;
 
   return `
-    <article class="next-card status-${status}" style="${buildNextCardStyle(color)}">
+    <article class="next-card status-${status}" data-home-plan="${plan.id}" style="${buildNextCardStyle(color)}">
       <div class="next-topline">
         <span class="next-time">${escapeHtml(timeLabel)}</span>
         ${extra}
       </div>
       <div>
-        <p class="next-title">${escapeHtml(plan.title)}</p>
+        <p class="next-title">${escapeHtml(title)}</p>
         <div class="todo-meta">
           <span class="tag">${escapeHtml(tag)}</span>
           ${task ? `<span class="tag">${escapeHtml(task.action)}</span>` : ""}
@@ -614,7 +678,7 @@ function renderNextCard(plan) {
       </div>
       <div class="next-actions">
         <button class="inline-button primary" type="button" data-start-plan="${plan.id}">${actionLabel}</button>
-        <button class="inline-button soft" type="button" data-complete-plan="${plan.id}">完成</button>
+        <button class="inline-button soft" type="button" data-complete-plan="${plan.id}">瀹屾垚</button>
       </div>
     </article>
   `;
@@ -625,19 +689,21 @@ function renderTodoRow(plan, group) {
   const timeLabel = group === "flexible" ? "Any time" : (plan.startTime || "Any time");
   const tag = shortTag(plan);
   const duration = planDurationMinutes(plan);
+  const task = plan.taskId ? findTask(plan.taskId) : null;
+  const title = task ? task.action : plan.title;
   const statusLabel = group === "flexible"
     ? (duration ? `${duration} min` : "插空做")
     : (duration ? `${duration} min` : "未设时长");
 
   return `
-    <article class="todo-row ${group === "overdue" ? "is-overdue" : ""} ${running ? "is-running" : ""}">
+    <article class="todo-row ${group === "overdue" ? "is-overdue" : ""} ${running ? "is-running" : ""}" data-home-plan="${plan.id}">
       <div class="todo-main">
         <span class="todo-time">${escapeHtml(timeLabel)}</span>
         <div>
-          <p class="todo-title">${escapeHtml(plan.title)}</p>
+          <p class="todo-title">${escapeHtml(title)}</p>
           <div class="todo-meta">
             <span class="tag">${escapeHtml(tag)}</span>
-            ${plan.important ? '<span class="status-chip">⭐ Important</span>' : ""}
+            ${plan.important ? '<span class="status-chip">猸?Important</span>' : ""}
           </div>
         </div>
       </div>
@@ -655,11 +721,12 @@ function renderTodoRow(plan, group) {
 }
 
 function renderCompletedCard(item) {
+  const title = item.taskId ? (findTask(item.taskId)?.action || item.title) : item.title;
   return `
     <article class="completed-card">
       <div class="todo-main">
         <div>
-          <p class="todo-title">${escapeHtml(item.title)}</p>
+          <p class="todo-title">${escapeHtml(title)}</p>
           <div class="todo-meta">
             <span class="tag">${escapeHtml(item.tag)}</span>
           </div>
@@ -672,42 +739,88 @@ function renderCompletedCard(item) {
 
 function renderTaskLibrary() {
   const groups = groupTemplates();
+  refs.toggleTaskEdit.textContent = ui.taskEditMode ? "Done" : "Edit";
   refs.taskTree.innerHTML = groups.length
-    ? groups.map((group, index) => renderTemplateGroup(group, index)).join("")
-    : renderEmptyState("还没有模板，先新建一个。");
+    ? groups.map((group, index) => renderFolderBlock(group, index)).join("")
+    : renderEmptyState("还没有任务模板，先新建一个。");
+  focusTasksLocationIfNeeded();
 }
 
-function renderTemplateGroup(group, groupIndex) {
+function renderFolderBlock(group, groupIndex) {
+  const folderFocused = ui.focusFolderName && ui.focusFolderName === group.folder;
   return `
-    <details class="template-group" ${groupIndex === 0 ? "open" : ""}>
-      <summary>
-        <span>${escapeHtml(group.folder)}</span>
-        <span class="task-meta">${group.categories.length} 个二级分类</span>
+    <details class="folder-block ${folderFocused ? "is-focused" : ""}" ${groupIndex === 0 || folderFocused ? "open" : ""} data-folder-row="${escapeAttr(group.folder)}">
+      <summary class="folder-row">
+        <div class="folder-name">
+          <span class="folder-icon">${escapeHtml(folderIcon(group.folder))}</span>
+          <span>${escapeHtml(group.folder)}</span>
+        </div>
+        <div class="folder-actions">
+          ${ui.taskEditMode ? `
+            <button class="row-action" type="button" data-folder-rename="${escapeAttr(group.folder)}">Rename</button>
+            <button class="row-action danger" type="button" data-folder-delete="${escapeAttr(group.folder)}">Delete</button>
+          ` : `<span class="task-meta">${group.categories.length} categories</span>`}
+        </div>
       </summary>
-      ${group.categories.map((category, categoryIndex) => `
-        <details class="template-category" ${categoryIndex === 0 ? "open" : ""}>
-          <summary>
-            <span>${escapeHtml(category.name)}</span>
-            <span class="task-meta">${category.tasks.length} 个三级分类</span>
-          </summary>
-          ${category.tasks.map((task) => `
-            <div class="template-row">
-              <div class="template-row-head">
-                <div class="breakdown-stack">
-                  <span class="breakdown-dot" style="--swatch-color:${task.color}"></span>
-                  <strong>${escapeHtml(task.action)}</strong>
-                </div>
-                <span class="task-meta">${escapeHtml(task.category)}</span>
-              </div>
-              <div class="template-actions">
-                <button class="mini-pill" type="button" data-edit-template="${task.id}">编辑</button>
-                <button class="mini-pill danger" type="button" data-delete-template="${task.id}">删除</button>
-              </div>
-            </div>
-          `).join("")}
-        </details>
-      `).join("")}
+      <div class="category-stack">
+        ${group.categories.map((category, categoryIndex) => renderCategoryBlock(group.folder, category, categoryIndex)).join("")}
+      </div>
     </details>
+  `;
+}
+
+function renderCategoryBlock(folder, category, categoryIndex) {
+  const categoryKey = buildCategoryKey(folder, category.name);
+  const focused = ui.focusCategoryKey === categoryKey;
+  const color = getCategoryColor(folder, category.name);
+  return `
+    <details class="category-block ${focused ? "is-focused" : ""}" ${categoryIndex === 0 || focused ? "open" : ""} data-category-row="${escapeAttr(categoryKey)}">
+      <summary class="category-row">
+        <div class="category-main">
+          <span class="chevron">▸</span>
+          <span class="category-color" style="--swatch-color:${color}"></span>
+          <span>${escapeHtml(category.name)}</span>
+        </div>
+        <div class="category-actions">
+          ${ui.taskEditMode ? `
+            <button class="row-action" type="button" data-category-rename="${escapeAttr(folder)}" data-category-name="${escapeAttr(category.name)}">Rename</button>
+            <button class="row-action danger" type="button" data-category-delete="${escapeAttr(folder)}" data-category-name="${escapeAttr(category.name)}">Delete</button>
+          ` : `<span class="task-meta">${category.tasks.length} tasks</span>`}
+        </div>
+      </summary>
+      <div class="category-tools">
+        ${ui.taskEditMode ? `
+          <div class="category-palette">
+            ${getTaskPaletteColors().map((swatch) => `
+              <button class="color-mini ${swatch === color ? "active" : ""}" type="button" style="--swatch-color:${swatch}" data-category-color="${swatch}" data-category-folder="${escapeAttr(folder)}" data-category-name="${escapeAttr(category.name)}"></button>
+            `).join("")}
+          </div>
+        ` : ""}
+        <div class="template-list">
+          ${category.tasks.map((task) => renderTaskTemplateRow(task)).join("")}
+        </div>
+      </div>
+    </details>
+  `;
+}
+
+function renderTaskTemplateRow(task) {
+  const focused = ui.focusTaskId === task.id;
+  const color = getCategoryColor(task.folder, task.category);
+  return `
+    <div class="template-pill-row ${focused ? "is-focused" : ""}" data-task-row="${task.id}">
+      <div class="template-pill">
+        <span class="template-dot" style="--swatch-color:${color}"></span>
+        <span>${escapeHtml(task.action)}</span>
+      </div>
+      <div class="template-actions">
+        ${ui.taskEditMode ? `
+          <button class="row-action" type="button" data-task-edit="${task.id}">Edit</button>
+          <button class="row-action" type="button" data-task-duration="${task.id}">Time</button>
+          <button class="row-action danger" type="button" data-task-delete="${task.id}">Delete</button>
+        ` : `${task.defaultDurationMinutes ? `<span class="template-duration">${task.defaultDurationMinutes} min</span>` : `<span class="task-meta">Template</span>`}`}
+      </div>
+    </div>
   `;
 }
 
@@ -715,96 +828,269 @@ function renderStats() {
   refs.rangeButtons.forEach((button) => {
     button.classList.toggle("active", button.dataset.range === ui.statsPreset);
   });
-
+  refs.statsModeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.statsMode === ui.statsMode);
+  });
+  refs.statsCustomRange.classList.toggle("hidden", ui.statsPreset !== "custom");
   refs.statsStartDate.value = ui.statsStart;
   refs.statsEndDate.value = ui.statsEnd;
 
   const entries = getEntriesWithinRange(ui.statsStart, ui.statsEnd);
-  const totalMinutes = entries.reduce((sum, entry) => sum + entryDurationMinutes(entry), 0);
-  const activeDays = new Set(entries.map((entry) => dateKey(entry.start))).size;
-  const categoryCount = new Set(entries.map((entry) => shortTag(entry))).size;
+  populateStatsFilters(entries);
+  const rows = buildStatsRows(entries);
+  const totalMinutes = rows.reduce((sum, row) => sum + row.minutes, 0);
 
-  refs.statsSummary.innerHTML = `
-    <article class="summary-card">
-      <p class="summary-label">实际时长</p>
-      <strong>${humanizeMinutes(totalMinutes)}</strong>
-    </article>
-    <article class="summary-card">
-      <p class="summary-label">记录次数</p>
-      <strong>${entries.length}</strong>
-    </article>
-    <article class="summary-card">
-      <p class="summary-label">活跃天数</p>
-      <strong>${activeDays}</strong>
-    </article>
-    <article class="summary-card">
-      <p class="summary-label">涉及分类</p>
-      <strong>${categoryCount}</strong>
-    </article>
-  `;
+  refs.statsTotalDuration.textContent = formatStatsDuration(totalMinutes);
+  refs.statsTotalLabel.textContent = statsRangeLabel(ui.statsPreset);
 
-  renderStatsBreakdown(entries);
+  renderStatsDonut(rows, totalMinutes);
+  renderStatsDetails(rows, totalMinutes);
+  renderStatsTrend(entries);
 }
 
-function renderStatsBreakdown(entries) {
+function populateStatsFilters(entries) {
+  const categoryOptions = getStatsCategoryOptions(entries);
+  const currentCategory = refs.statsCategoryFilter.value || "all";
+  refs.statsCategoryFilter.innerHTML = [
+    `<option value="all">All Categories</option>`,
+    ...categoryOptions.map((item) => `<option value="${escapeAttr(item.value)}">${escapeHtml(item.label)}</option>`)
+  ].join("");
+  refs.statsCategoryFilter.value = categoryOptions.some((item) => item.value === currentCategory) ? currentCategory : "all";
+  populateStatsTaskFilter(entries);
+}
+
+function populateStatsTaskFilter(entries = getEntriesWithinRange(ui.statsStart, ui.statsEnd)) {
+  const taskOptions = getStatsTaskOptions(entries, refs.statsCategoryFilter.value || "all");
+  const currentTask = refs.statsTaskFilter.value || "all";
+  refs.statsTaskFilter.innerHTML = [
+    `<option value="all">All Tasks</option>`,
+    ...taskOptions.map((item) => `<option value="${escapeAttr(item.value)}">${escapeHtml(item.label)}</option>`)
+  ].join("");
+  refs.statsTaskFilter.value = taskOptions.some((item) => item.value === currentTask) ? currentTask : "all";
+}
+
+function buildStatsRows(entries) {
+  const filteredEntries = filterEntriesForStats(entries);
   const groups = new Map();
-  entries.forEach((entry) => {
-    const key = entry.taskId || entry.title;
-    const task = entry.taskId ? findTask(entry.taskId) : null;
+
+  filteredEntries.forEach((entry) => {
+    const meta = getEntryStatsMeta(entry);
+    const key = ui.statsMode === "task" ? meta.taskKey : meta.categoryKey;
+    const label = ui.statsMode === "task" ? meta.taskLabel : meta.categoryLabel;
+    const note = ui.statsMode === "task" ? meta.categoryLabel : meta.folderLabel;
     const current = groups.get(key) || {
-      label: entry.title,
-      note: task ? `${task.folder} / ${task.category} / ${task.action}` : "临时记录",
-      color: getItemColor(entry),
-      minutes: 0
+      key,
+      label,
+      note,
+      color: meta.color,
+      minutes: 0,
+      count: 0
     };
     current.minutes += entryDurationMinutes(entry);
+    current.count += 1;
     groups.set(key, current);
   });
 
-  const ordered = [...groups.values()].sort((a, b) => b.minutes - a.minutes);
-  refs.statsBreakdown.innerHTML = ordered.length
-    ? ordered.map((item) => `
-      <article class="breakdown-row">
-        <div class="breakdown-stack">
-          <span class="breakdown-dot" style="--swatch-color:${item.color}"></span>
-          <div>
-            <strong>${escapeHtml(item.label)}</strong>
-            <p class="stats-note">${escapeHtml(item.note)}</p>
-          </div>
-        </div>
-        <strong>${humanizeMinutes(item.minutes)}</strong>
-      </article>
-    `).join("")
+  const rows = [...groups.values()].sort((a, b) => b.minutes - a.minutes || a.label.localeCompare(b.label, "zh-CN"));
+  if (ui.statsSelectedKey && !rows.some((row) => row.key === ui.statsSelectedKey)) {
+    ui.statsSelectedKey = "";
+  }
+  return rows;
+}
+
+function renderStatsDonut(rows, totalMinutes) {
+  const circumference = 2 * Math.PI * 82;
+  const center = 120;
+  let offset = 0;
+
+  const segments = rows.map((row) => {
+    const fraction = totalMinutes ? row.minutes / totalMinutes : 0;
+    const length = circumference * fraction;
+    const isActive = ui.statsSelectedKey === row.key;
+    const muted = ui.statsSelectedKey && !isActive;
+    const startAngle = -90 + (offset / circumference) * 360;
+    const sweep = fraction * 360;
+    const midAngle = startAngle + sweep / 2;
+    const markup = `
+      <circle
+        class="stats-segment ${isActive ? "is-active" : ""} ${muted ? "is-muted" : ""}"
+        cx="${center}"
+        cy="${center}"
+        r="82"
+        stroke="${row.color}"
+        data-stats-key="${escapeAttr(row.key)}"
+        data-mid-angle="${midAngle.toFixed(2)}"
+        stroke-dasharray="${length} ${circumference}"
+        stroke-dashoffset="${-offset}"
+      ></circle>
+    `;
+    offset += length;
+    return markup;
+  }).join("");
+
+  refs.statsDonut.innerHTML = `
+    <g transform="rotate(-90 120 120)">
+      <circle class="stats-track" cx="${center}" cy="${center}" r="82"></circle>
+      ${segments}
+    </g>
+  `;
+
+  if (!rows.length || !totalMinutes || !ui.statsSelectedKey) {
+    refs.statsCallout.classList.add("hidden");
+    refs.statsCallout.innerHTML = "";
+    refs.statsCallout.style.left = "";
+    refs.statsCallout.style.top = "";
+    return;
+  }
+
+  const activeRow = rows.find((row) => row.key === ui.statsSelectedKey);
+  const activeSegment = refs.statsDonut.querySelector(`[data-stats-key="${escapeSelector(ui.statsSelectedKey)}"]`);
+  if (!activeRow || !activeSegment) {
+    refs.statsCallout.classList.add("hidden");
+    return;
+  }
+
+  const angle = Number(activeSegment.dataset.midAngle || 0);
+  const radians = (angle * Math.PI) / 180;
+  const radius = 112;
+  const left = clamp(((center + Math.cos(radians) * radius) / 240) * 100, 18, 82);
+  const top = clamp(((center + Math.sin(radians) * radius) / 240) * 100, 18, 82);
+  const percent = totalMinutes ? Math.round((activeRow.minutes / totalMinutes) * 100) : 0;
+
+  refs.statsCallout.classList.remove("hidden");
+  refs.statsCallout.style.left = `${left}%`;
+  refs.statsCallout.style.top = `${top}%`;
+  refs.statsCallout.innerHTML = `
+    <strong>${escapeHtml(activeRow.label)}</strong>
+    <span>${formatStatsDuration(activeRow.minutes)} · ${percent}%</span>
+  `;
+}
+
+function renderStatsDetails(rows, totalMinutes) {
+  refs.statsDetailList.innerHTML = rows.length
+    ? rows.map((row) => {
+      const percent = totalMinutes ? Math.round((row.minutes / totalMinutes) * 100) : 0;
+      return `
+        <button class="stats-detail-row ${ui.statsSelectedKey === row.key ? "is-active" : ""}" type="button" data-stats-row="${escapeAttr(row.key)}">
+          <span class="stats-detail-left">
+            <span class="breakdown-dot" style="--swatch-color:${row.color}"></span>
+            <span>
+              <strong>${escapeHtml(row.label)}</strong>
+              ${row.note ? `<span class="stats-detail-note">${escapeHtml(row.note)}</span>` : ""}
+            </span>
+          </span>
+          <span class="stats-detail-right">
+            <strong>${formatStatsDuration(row.minutes)}</strong>
+            <span>${percent}%</span>
+          </span>
+        </button>
+      `;
+    }).join("")
     : renderEmptyState("这个时间范围还没有记录。");
 }
 
-function renderSettings() {
-  refs.themeGrid.innerHTML = THEMES.map((theme) => `
-    <button class="theme-card ${theme.id === state.preferences.themeId ? "active" : ""}" type="button" data-theme-id="${theme.id}">
-      <strong>${escapeHtml(theme.name)}</strong>
-      <p class="helper-copy">${escapeHtml(theme.mood)}</p>
-      <div class="theme-preview">
-        ${theme.palette.map((color) => `<span class="swatch" style="--swatch-color:${color}"></span>`).join("")}
-      </div>
-    </button>
-  `).join("");
+function renderStatsTrend(entries) {
+  const filteredEntries = filterEntriesForStats(entries);
+  const endDate = new Date(`${ui.statsEnd}T12:00:00`);
+  const days = [];
 
-  refs.paletteGrid.innerHTML = getPaletteCards().map((palette) => `
-    <button class="palette-card ${palette.id === state.preferences.paletteId ? "active" : ""}" type="button" data-palette-id="${palette.id}">
-      <strong>${escapeHtml(palette.name)}</strong>
-      <p class="helper-copy">${escapeHtml(palette.note)}</p>
-      <div class="palette-strip">
-        ${palette.colors.map((color) => `<span class="palette-chip" style="--swatch-color:${color}"></span>`).join("")}
-      </div>
-    </button>
-  `).join("");
+  for (let index = 6; index >= 0; index -= 1) {
+    const day = new Date(endDate);
+    day.setDate(endDate.getDate() - index);
+    const key = dateKey(day);
+    const minutes = filteredEntries
+      .filter((entry) => dateKey(entry.start) === key)
+      .reduce((sum, entry) => sum + entryDurationMinutes(entry), 0);
+    days.push({ key, label: shortWeekday(day), minutes });
+  }
 
-  refs.customPaletteInput.value = state.preferences.customPalette.join(",");
-  refs.customPalettePreview.innerHTML = state.preferences.customPalette.length
-    ? state.preferences.customPalette.map((color) => `<span class="palette-chip" style="--swatch-color:${color}"></span>`).join("")
-    : renderEmptyState("还没有导入自定义颜色组。");
+  const maxMinutes = Math.max(...days.map((day) => day.minutes), 1);
+  refs.statsTrendChart.innerHTML = days.map((day) => `
+    <div class="trend-bar">
+      <strong>${day.minutes ? formatStatsDuration(day.minutes) : "0m"}</strong>
+      <div class="trend-bar-fill" style="height:${Math.max(12, Math.round((day.minutes / maxMinutes) * 100))}%"></div>
+      <span>${escapeHtml(day.label)}</span>
+    </div>
+  `).join("");
 }
 
+function getStatsCategoryOptions(entries) {
+  const map = new Map();
+  state.tasks.forEach((task) => {
+    const key = buildCategoryKey(task.folder, task.category);
+    if (!map.has(key)) {
+      map.set(key, { value: key, label: task.category });
+    }
+  });
+
+  entries.forEach((entry) => {
+    const meta = getEntryStatsMeta(entry);
+    if (!map.has(meta.categoryKey)) {
+      map.set(meta.categoryKey, { value: meta.categoryKey, label: meta.categoryLabel });
+    }
+  });
+
+  return [...map.values()].sort((a, b) => a.label.localeCompare(b.label, "zh-CN"));
+}
+
+function getStatsTaskOptions(entries, categoryFilter) {
+  const map = new Map();
+
+  state.tasks.forEach((task) => {
+    const key = `task:${task.id}`;
+    const categoryKey = buildCategoryKey(task.folder, task.category);
+    if (categoryFilter !== "all" && categoryFilter !== categoryKey) {
+      return;
+    }
+    map.set(key, { value: key, label: task.action });
+  });
+
+  entries.forEach((entry) => {
+    const meta = getEntryStatsMeta(entry);
+    if (categoryFilter !== "all" && categoryFilter !== meta.categoryKey) {
+      return;
+    }
+    if (!map.has(meta.taskKey)) {
+      map.set(meta.taskKey, { value: meta.taskKey, label: meta.taskLabel });
+    }
+  });
+
+  return [...map.values()].sort((a, b) => a.label.localeCompare(b.label, "zh-CN"));
+}
+
+function filterEntriesForStats(entries) {
+  const categoryFilter = refs.statsCategoryFilter.value || "all";
+  const taskFilter = refs.statsTaskFilter.value || "all";
+  return entries.filter((entry) => {
+    const meta = getEntryStatsMeta(entry);
+    const categoryMatch = categoryFilter === "all" || meta.categoryKey === categoryFilter;
+    const taskMatch = taskFilter === "all" || meta.taskKey === taskFilter;
+    return categoryMatch && taskMatch;
+  });
+}
+
+function getEntryStatsMeta(entry) {
+  const task = entry.taskId ? findTask(entry.taskId) : null;
+  if (task) {
+    return {
+      folderLabel: task.folder,
+      categoryLabel: task.category,
+      taskLabel: task.action,
+      categoryKey: buildCategoryKey(task.folder, task.category),
+      taskKey: `task:${task.id}`,
+      color: getCategoryColor(task.folder, task.category)
+    };
+  }
+
+  return {
+    folderLabel: "No Folder",
+    categoryLabel: "No Category",
+    taskLabel: entry.title || "Untitled",
+    categoryKey: "category:none",
+    taskKey: `temp:${entry.title || entry.id}`,
+    color: entry.color || getTaskPaletteColors()[0] || "#AFC7FF"
+  };
+}
 function switchView(view, quiet = false) {
   ui.activeView = view;
   refs.views.forEach((section) => {
@@ -822,9 +1108,6 @@ function switchView(view, quiet = false) {
     }
     if (view === "stats") {
       renderStats();
-    }
-    if (view === "settings") {
-      renderSettings();
     }
   }
 }
@@ -911,7 +1194,7 @@ function renderCategorySheet() {
     refs.categoryPath.textContent = "先选一级分类";
     refs.categoryList.innerHTML = folders.map((folder) => (
       `<button class="category-item" type="button" data-category-folder="${escapeAttr(folder)}">
-        <strong>${escapeHtml(folder)}</strong><span>›</span>
+        <strong>${escapeHtml(folder)}</strong><span>鈥?/span>
       </button>`
     )).join("");
     return;
@@ -924,7 +1207,7 @@ function renderCategorySheet() {
     refs.categoryPath.textContent = `${ui.categoryFolder}`;
     refs.categoryList.innerHTML = categories.map((category) => (
       `<button class="category-item" type="button" data-category-name="${escapeAttr(category)}">
-        <strong>${escapeHtml(category)}</strong><span>›</span>
+        <strong>${escapeHtml(category)}</strong><span>鈥?/span>
       </button>`
     )).join("");
     return;
@@ -1054,17 +1337,19 @@ function handleCreateSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
   const title = String(formData.get("title") || "").trim();
+  const taskId = String(formData.get("taskId") || "");
+  const task = taskId ? findTask(taskId) : null;
   if (!title) {
     return;
   }
 
   state.plans.unshift(createPlan({
     title,
-    taskId: String(formData.get("taskId") || ""),
+    taskId,
     date: dateKey(new Date()),
     startTime: String(formData.get("startTime") || ""),
-    durationMinutes: parseMinutes(formData.get("durationMinutes")),
-    color: refs.createForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF",
+    durationMinutes: parseMinutes(formData.get("durationMinutes")) || task?.defaultDurationMinutes || null,
+    color: task ? getCategoryColor(task.folder, task.category) : (refs.createForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF"),
     important: Boolean(formData.get("important"))
   }));
 
@@ -1134,17 +1419,19 @@ function handleStartSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
   const title = String(formData.get("title") || "").trim();
+  const taskId = String(formData.get("taskId") || "");
+  const task = taskId ? findTask(taskId) : null;
   if (!title) {
     return;
   }
 
   const plan = createPlan({
     title,
-    taskId: String(formData.get("taskId") || ""),
+    taskId,
     date: dateKey(new Date()),
     startTime: "",
-    durationMinutes: null,
-    color: getTaskColorByTaskId(String(formData.get("taskId") || "")),
+    durationMinutes: task?.defaultDurationMinutes || null,
+    color: task ? getCategoryColor(task.folder, task.category) : "",
     important: false
   });
 
@@ -1164,7 +1451,7 @@ function openTemplateForm(taskId = "") {
   refs.templateForm.reset();
   refs.templateForm.elements.templateId.value = "";
   refs.templateSheetKicker.textContent = "Task Template";
-  refs.templateSheetTitle.textContent = "新建一个分类模板";
+  refs.templateSheetTitle.textContent = "新建一个分类 / 模板";
   const defaultColor = getTaskPaletteColors()[0] || "#AFC7FF";
   refs.templateForm.dataset.selectedColor = defaultColor;
   renderTemplateColorPicker(defaultColor);
@@ -1180,8 +1467,10 @@ function openTemplateForm(taskId = "") {
     refs.templateForm.elements.folder.value = task.folder;
     refs.templateForm.elements.category.value = task.category;
     refs.templateForm.elements.action.value = task.action;
-    refs.templateForm.dataset.selectedColor = task.color;
-    renderTemplateColorPicker(task.color);
+    refs.templateForm.elements.defaultDurationMinutes.value = task.defaultDurationMinutes || "";
+    const categoryColor = getCategoryColor(task.folder, task.category);
+    refs.templateForm.dataset.selectedColor = categoryColor;
+    renderTemplateColorPicker(categoryColor);
   }
 
   openSheet("template-sheet");
@@ -1206,11 +1495,17 @@ function handleTemplateSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
   const templateId = String(formData.get("templateId") || "");
+  const folder = String(formData.get("folder") || "").trim();
+  const category = String(formData.get("category") || "").trim();
+  const action = String(formData.get("action") || "").trim();
+  const defaultDurationMinutes = parseMinutes(formData.get("defaultDurationMinutes"));
+  const color = refs.templateForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF";
   const payload = {
-    folder: String(formData.get("folder") || "").trim(),
-    category: String(formData.get("category") || "").trim(),
-    action: String(formData.get("action") || "").trim(),
-    color: refs.templateForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF"
+    folder,
+    category,
+    action,
+    color,
+    defaultDurationMinutes
   };
 
   if (!payload.folder || !payload.category || !payload.action) {
@@ -1221,13 +1516,19 @@ function handleTemplateSubmit(event) {
     const task = findTask(templateId);
     if (task) {
       Object.assign(task, payload);
+      setCategoryColor(payload.folder, payload.category, color);
     }
   } else {
+    const inheritedColor = hasCategory(payload.folder, payload.category)
+      ? getCategoryColor(payload.folder, payload.category)
+      : color;
     state.tasks.unshift({
       id: uid("task"),
       ...payload,
+      color: inheritedColor,
       createdAt: new Date().toISOString()
     });
+    setCategoryColor(payload.folder, payload.category, inheritedColor);
   }
 
   saveState();
@@ -1284,16 +1585,273 @@ function handleFocusTimerActions(event) {
   }
 }
 
+function bindHomeLongPress(container) {
+  let pressTimer = 0;
+  let startX = 0;
+  let startY = 0;
+
+  const clearPress = () => {
+    if (pressTimer) {
+      window.clearTimeout(pressTimer);
+      pressTimer = 0;
+    }
+  };
+
+  container.addEventListener("pointerdown", (event) => {
+    if (event.button && event.button !== 0) {
+      return;
+    }
+    if (event.target.closest("button")) {
+      return;
+    }
+    const item = event.target.closest("[data-home-plan]");
+    if (!item) {
+      return;
+    }
+    const plan = findPlan(item.dataset.homePlan);
+    if (!plan || !plan.taskId) {
+      return;
+    }
+
+    startX = event.clientX;
+    startY = event.clientY;
+    clearPress();
+    pressTimer = window.setTimeout(() => {
+      openHomeTaskMenu(plan.id);
+      pressTimer = 0;
+    }, 420);
+  });
+
+  container.addEventListener("pointermove", (event) => {
+    if (!pressTimer) {
+      return;
+    }
+    if (Math.abs(event.clientX - startX) > 12 || Math.abs(event.clientY - startY) > 12) {
+      clearPress();
+    }
+  });
+
+  ["pointerup", "pointercancel", "pointerleave", "scroll"].forEach((eventName) => {
+    container.addEventListener(eventName, clearPress, { passive: true });
+  });
+}
+
+function openHomeTaskMenu(planId) {
+  const plan = findPlan(planId);
+  if (!plan || !plan.taskId) {
+    return;
+  }
+  const task = findTask(plan.taskId);
+  ui.homeMenuPlanId = plan.id;
+  refs.homeTaskSheetTitle.textContent = task ? `${task.category} / ${task.action}` : plan.title;
+  openSheet("home-task-sheet");
+}
+
+function toggleTaskEditMode() {
+  ui.taskEditMode = !ui.taskEditMode;
+  renderTaskLibrary();
+}
+
+function jumpFromHomeTaskMenuToEdit() {
+  const plan = findPlan(ui.homeMenuPlanId);
+  const task = plan?.taskId ? findTask(plan.taskId) : null;
+  if (!task) {
+    return;
+  }
+  ui.taskEditMode = true;
+  ui.focusFolderName = task.folder;
+  ui.focusCategoryKey = buildCategoryKey(task.folder, task.category);
+  ui.focusTaskId = task.id;
+  closeSheet("home-task-sheet");
+  switchView("tasks");
+  openTemplateForm(task.id);
+}
+
+function jumpFromHomeTaskMenuToCategory() {
+  const plan = findPlan(ui.homeMenuPlanId);
+  const task = plan?.taskId ? findTask(plan.taskId) : null;
+  if (!task) {
+    return;
+  }
+  ui.taskEditMode = true;
+  ui.focusFolderName = task.folder;
+  ui.focusCategoryKey = buildCategoryKey(task.folder, task.category);
+  ui.focusTaskId = task.id;
+  closeSheet("home-task-sheet");
+  switchView("tasks");
+}
+
+function handleStatsDetailClick(event) {
+  const row = event.target.closest("[data-stats-row]");
+  if (!row) {
+    return;
+  }
+  const key = row.dataset.statsRow;
+  ui.statsSelectedKey = ui.statsSelectedKey === key ? "" : key;
+  renderStats();
+}
+
+function handleStatsDonutClick(event) {
+  const segment = event.target.closest("[data-stats-key]");
+  if (!segment) {
+    ui.statsSelectedKey = "";
+    renderStats();
+    return;
+  }
+  const key = segment.dataset.statsKey;
+  ui.statsSelectedKey = ui.statsSelectedKey === key ? "" : key;
+  renderStats();
+}
+
 function handleTaskTreeActions(event) {
-  const editButton = event.target.closest("[data-edit-template]");
-  if (editButton) {
-    openTemplateForm(editButton.dataset.editTemplate);
+  const folderRename = event.target.closest("[data-folder-rename]");
+  if (folderRename) {
+    renameFolder(folderRename.dataset.folderRename);
     return;
   }
 
-  const deleteButton = event.target.closest("[data-delete-template]");
-  if (deleteButton) {
-    deleteTemplate(deleteButton.dataset.deleteTemplate);
+  const folderDelete = event.target.closest("[data-folder-delete]");
+  if (folderDelete) {
+    deleteFolder(folderDelete.dataset.folderDelete);
+    return;
+  }
+
+  const categoryRename = event.target.closest("[data-category-rename]");
+  if (categoryRename) {
+    renameCategory(categoryRename.dataset.categoryRename, categoryRename.dataset.categoryName);
+    return;
+  }
+
+  const categoryDelete = event.target.closest("[data-category-delete]");
+  if (categoryDelete) {
+    deleteCategory(categoryDelete.dataset.categoryDelete, categoryDelete.dataset.categoryName);
+    return;
+  }
+
+  const categoryColor = event.target.closest("[data-category-color]");
+  if (categoryColor) {
+    setCategoryColor(categoryColor.dataset.categoryFolder, categoryColor.dataset.categoryName, categoryColor.dataset.categoryColor);
+    saveState();
+    renderAll();
+    return;
+  }
+
+  const taskEdit = event.target.closest("[data-task-edit]");
+  if (taskEdit) {
+    ui.focusTaskId = taskEdit.dataset.taskEdit;
+    openTemplateForm(taskEdit.dataset.taskEdit);
+    return;
+  }
+
+  const taskDuration = event.target.closest("[data-task-duration]");
+  if (taskDuration) {
+    updateTaskDuration(taskDuration.dataset.taskDuration);
+    return;
+  }
+
+  const taskDelete = event.target.closest("[data-task-delete]");
+  if (taskDelete) {
+    deleteTemplate(taskDelete.dataset.taskDelete);
+  }
+}
+
+function renameFolder(folder) {
+  const nextName = window.prompt("重命名一级分类", folder)?.trim();
+  if (!nextName || nextName === folder) {
+    return;
+  }
+  state.tasks.forEach((task) => {
+    if (task.folder === folder) {
+      task.folder = nextName;
+    }
+  });
+  if (ui.focusFolderName === folder) {
+    ui.focusFolderName = nextName;
+  }
+  if (ui.focusCategoryKey.startsWith(`${folder}::`)) {
+    ui.focusCategoryKey = ui.focusCategoryKey.replace(`${folder}::`, `${nextName}::`);
+  }
+  saveState();
+  renderAll();
+}
+
+function deleteFolder(folder) {
+  const ids = state.tasks.filter((task) => task.folder === folder).map((task) => task.id);
+  if (!ids.length) {
+    return;
+  }
+  if (!window.confirm(`删除一级分类“${folder}”？里面的模板会一起删除。`)) {
+    return;
+  }
+  state.tasks = state.tasks.filter((task) => task.folder !== folder);
+  clearTaskReferences(ids);
+  saveState();
+  renderAll();
+}
+
+function renameCategory(folder, category) {
+  const nextName = window.prompt("重命名二级分类", category)?.trim();
+  if (!nextName || nextName === category) {
+    return;
+  }
+  const color = getCategoryColor(folder, category);
+  state.tasks.forEach((task) => {
+    if (task.folder === folder && task.category === category) {
+      task.category = nextName;
+      task.color = color;
+    }
+  });
+  if (ui.focusCategoryKey === buildCategoryKey(folder, category)) {
+    ui.focusCategoryKey = buildCategoryKey(folder, nextName);
+  }
+  saveState();
+  renderAll();
+}
+
+function deleteCategory(folder, category) {
+  const ids = state.tasks
+    .filter((task) => task.folder === folder && task.category === category)
+    .map((task) => task.id);
+  if (!ids.length) {
+    return;
+  }
+  if (!window.confirm(`删除二级分类“${category}”？里面的模板会一起删除。`)) {
+    return;
+  }
+  state.tasks = state.tasks.filter((task) => !(task.folder === folder && task.category === category));
+  clearTaskReferences(ids);
+  saveState();
+  renderAll();
+}
+
+function updateTaskDuration(taskId) {
+  const task = findTask(taskId);
+  if (!task) {
+    return;
+  }
+  const nextValue = window.prompt("默认时长（分钟）", task.defaultDurationMinutes || "");
+  if (nextValue === null) {
+    return;
+  }
+  task.defaultDurationMinutes = parseMinutes(nextValue);
+  saveState();
+  renderTaskLibrary();
+}
+
+function clearTaskReferences(taskIds) {
+  const taskSet = new Set(taskIds);
+  state.plans.forEach((plan) => {
+    if (taskSet.has(plan.taskId)) {
+      plan.taskId = "";
+    }
+  });
+  state.entries.forEach((entry) => {
+    if (taskSet.has(entry.taskId)) {
+      entry.taskId = "";
+    }
+  });
+  if (state.activeSession && taskSet.has(state.activeSession.taskId)) {
+    state.activeSession.taskId = "";
   }
 }
 
@@ -1449,25 +2007,13 @@ function deleteTemplate(taskId) {
     return;
   }
 
-  const confirmed = window.confirm(`删除模板“${task.action}”？已有的时间记录会保留标题，但不再关联这个模板。`);
+  const confirmed = window.confirm(`删除模板“${task.action}”？已有记录会保留标题，但不再关联这个模板。`);
   if (!confirmed) {
     return;
   }
 
   state.tasks = state.tasks.filter((item) => item.id !== taskId);
-  state.plans.forEach((plan) => {
-    if (plan.taskId === taskId) {
-      plan.taskId = "";
-    }
-  });
-  state.entries.forEach((entry) => {
-    if (entry.taskId === taskId) {
-      entry.taskId = "";
-    }
-  });
-  if (state.activeSession?.taskId === taskId) {
-    state.activeSession.taskId = "";
-  }
+  clearTaskReferences([taskId]);
   saveState();
   renderAll();
 }
@@ -1506,6 +2052,7 @@ function getCompletedItems() {
     .map((plan) => ({
       id: `plan-${plan.id}`,
       title: plan.title,
+      taskId: plan.taskId,
       tag: shortTag(plan),
       meta: plan.startTime ? `${plan.startTime}${planDurationMinutes(plan) ? ` · ${planDurationMinutes(plan)} min` : ""}` : "已完成"
     }));
@@ -1515,6 +2062,7 @@ function getCompletedItems() {
     .map((entry) => ({
       id: `entry-${entry.id}`,
       title: entry.title,
+      taskId: entry.taskId,
       tag: shortTag(entry),
       meta: `${formatTime(entry.start)} - ${formatTime(entry.end)}`
     }));
@@ -1581,10 +2129,39 @@ function comparePlans(a, b) {
 }
 
 function getEntriesWithinRange(startDate, endDate) {
-  return state.entries.filter((entry) => {
+  const persistedEntries = state.entries.filter((entry) => {
     const day = dateKey(entry.start);
     return day >= startDate && day <= endDate;
   });
+
+  if (!state.activeSession) {
+    return persistedEntries;
+  }
+
+  const liveEntries = state.activeSession.segments
+    .map((segment, index) => {
+      const end = segment.end || new Date(nowTick).toISOString();
+      if (new Date(end).getTime() <= new Date(segment.start).getTime()) {
+        return null;
+      }
+      const day = dateKey(segment.start);
+      if (day < startDate || day > endDate) {
+        return null;
+      }
+      return {
+        id: `live_${index}`,
+        title: state.activeSession.title,
+        taskId: state.activeSession.taskId,
+        planId: state.activeSession.planId,
+        color: state.activeSession.color,
+        start: segment.start,
+        end,
+        source: "live"
+      };
+    })
+    .filter(Boolean);
+
+  return [...persistedEntries, ...liveEntries];
 }
 
 function syncStatsDatesFromPreset(preset) {
@@ -1620,6 +2197,40 @@ function syncStatsDatesFromPreset(preset) {
   }
 }
 
+function formatStatsDuration(minutes) {
+  const rounded = Math.max(Math.round(minutes || 0), 0);
+  const hours = Math.floor(rounded / 60);
+  const rest = rounded % 60;
+  if (!hours) {
+    return `${rounded}m`;
+  }
+  return rest ? `${hours}h ${rest}m` : `${hours}h`;
+}
+
+function statsRangeLabel(preset) {
+  if (preset === "day") {
+    return "Tracked today";
+  }
+  if (preset === "week") {
+    return "Tracked this week";
+  }
+  if (preset === "month") {
+    return "Tracked this month";
+  }
+  return "Tracked in range";
+}
+
+function shortWeekday(date) {
+  return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][date.getDay()];
+}
+
+function escapeSelector(value) {
+  if (window.CSS && typeof window.CSS.escape === "function") {
+    return window.CSS.escape(String(value));
+  }
+  return String(value).replaceAll("\"", "\\\"");
+}
+
 function getPaletteCards() {
   const cards = THEMES.map((theme) => ({
     id: theme.id,
@@ -1631,7 +2242,7 @@ function getPaletteCards() {
     cards.push({
       id: "custom",
       name: state.preferences.customPaletteName,
-      note: "用户导入",
+      note: "鐢ㄦ埛瀵煎叆",
       colors: state.preferences.customPalette
     });
   }
@@ -1666,6 +2277,89 @@ function groupTemplates() {
     folder: folder.folder,
     categories: [...folder.categories.values()]
   }));
+}
+
+function buildCategoryKey(folder, category) {
+  return `${folder}::${category}`;
+}
+
+function hasCategory(folder, category) {
+  return state.tasks.some((task) => task.folder === folder && task.category === category);
+}
+
+function getCategoryColor(folder, category) {
+  const task = state.tasks.find((item) => item.folder === folder && item.category === category);
+  return task?.color || getTaskPaletteColors()[0] || "#AFC7FF";
+}
+
+function setCategoryColor(folder, category, color) {
+  state.tasks.forEach((task) => {
+    if (task.folder === folder && task.category === category) {
+      task.color = color;
+    }
+  });
+}
+
+function syncCategoryColors() {
+  const palette = getTaskPaletteColors();
+  const categories = new Map();
+  let changed = false;
+
+  state.tasks.forEach((task, index) => {
+    const key = buildCategoryKey(task.folder, task.category);
+    if (!categories.has(key)) {
+      categories.set(key, task.color || palette[index % palette.length] || "#AFC7FF");
+    }
+  });
+
+  state.tasks.forEach((task) => {
+    const key = buildCategoryKey(task.folder, task.category);
+    const color = categories.get(key) || palette[0] || "#AFC7FF";
+    if (task.color !== color) {
+      task.color = color;
+      changed = true;
+    }
+  });
+
+  if (changed) {
+    saveState();
+  }
+}
+
+function folderIcon(folder) {
+  const lower = String(folder || "").toLowerCase();
+  if (lower.includes("学") || lower.includes("study")) {
+    return "📘";
+  }
+  if (lower.includes("生") || lower.includes("life")) {
+    return "🏠";
+  }
+  if (lower.includes("工") || lower.includes("work")) {
+    return "💼";
+  }
+  return "📁";
+}
+
+function focusTasksLocationIfNeeded() {
+  if (ui.activeView !== "tasks") {
+    return;
+  }
+
+  const selectors = [
+    ui.focusTaskId ? `[data-task-row="${escapeSelector(ui.focusTaskId)}"]` : "",
+    ui.focusCategoryKey ? `[data-category-row="${escapeSelector(ui.focusCategoryKey)}"]` : "",
+    ui.focusFolderName ? `[data-folder-row="${escapeSelector(ui.focusFolderName)}"]` : ""
+  ].filter(Boolean);
+
+  const target = selectors
+    .map((selector) => refs.taskTree.querySelector(selector))
+    .find(Boolean);
+
+  if (target) {
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ block: "center", behavior: "smooth" });
+    });
+  }
 }
 
 function createPlan({ title, taskId, date, startTime, durationMinutes, important, color = "" }) {
@@ -1726,18 +2420,18 @@ function shortTag(item) {
 
 function getTaskColorByTaskId(taskId) {
   const task = findTask(taskId);
-  return task?.color || "";
+  return task ? getCategoryColor(task.folder, task.category) : "";
 }
 
 function getItemColor(item) {
   if (!item) {
     return getTaskPaletteColors()[0] || "#AFC7FF";
   }
-  if (item.color) {
-    return item.color;
-  }
   if (item.taskId) {
     return getTaskColorByTaskId(item.taskId) || getTaskPaletteColors()[0] || "#AFC7FF";
+  }
+  if (item.color) {
+    return item.color;
   }
   return getTaskPaletteColors()[0] || "#AFC7FF";
 }
@@ -1844,11 +2538,11 @@ function formatDurationClock(milliseconds) {
 function humanizeMinutes(minutes) {
   const value = Math.max(Math.round(minutes || 0), 0);
   if (value < 60) {
-    return `${value}分`;
+    return `${value}分钟`;
   }
   const hours = Math.floor(value / 60);
   const rest = value % 60;
-  return rest ? `${hours}小时 ${rest}分` : `${hours}小时`;
+  return rest ? `${hours}小时 ${rest}分钟` : `${hours}小时`;
 }
 
 function weekdayLabel(date) {
@@ -1857,6 +2551,14 @@ function weekdayLabel(date) {
 
 function uniqueValues(values) {
   return [...new Set(values)];
+}
+
+function repairKnownText(value) {
+  let text = String(value || "");
+  TEXT_REPAIRS.forEach((replacement, source) => {
+    text = text.replaceAll(source, replacement);
+  });
+  return text;
 }
 
 function dedupeById(items) {
@@ -1913,3 +2615,6 @@ function escapeHtml(value) {
 function escapeAttr(value) {
   return escapeHtml(value);
 }
+
+
+
