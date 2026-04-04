@@ -132,16 +132,16 @@ const I18N = {
     nav: { home: "Home", stats: "Stats", tasks: "Tasks", settings: "Settings" },
     home: {
       title: "Today",
-      next: "Next",
-      todo: "To-Do List",
+      next: "Up Next",
+      todo: "To-Do",
       overdue: "Overdue",
       todayGroup: "Today",
-      flexible: "Flexible",
+      flexible: "No Time",
       completed: "Completed",
-      emptyNext: "Add a task to decide the next color of today.",
-      emptyToday: "No timed tasks for today.",
-      emptyFlexible: "No flexible tasks",
-      emptyCompleted: "Completed tasks will rest here.",
+      emptyNext: "No tasks yet.",
+      emptyToday: "No timed tasks today.",
+      emptyFlexible: "No no-time tasks.",
+      emptyCompleted: "No completed tasks yet.",
       idleTitle: "No task in progress",
       running: "Now",
       paused: "Paused",
@@ -225,14 +225,23 @@ const I18N = {
       taskName: "Task",
       defaultDuration: "Default Duration (optional)",
       empty: "No tasks yet. Add your first structure item.",
-      newItem: "New Item",
-      editItem: "Edit Item",
+      newItem: "New Task",
+      editItem: "Edit Task",
       taskOptions: "Task Options",
       time: "Time",
       addCategory: "Add Category",
       addTask: "Add Task",
       addItem: "Add",
-      noPath: "No category selected"
+      noPath: "No category selected",
+      plannedTime: "Planned Time (optional)",
+      moreSettings: "More Settings",
+      hideSettings: "Hide Settings",
+      repeat: "Repeat",
+      repeatNone: "None",
+      repeatDaily: "Every Day",
+      repeatWeekdays: "Weekdays",
+      repeatWeekly: "Weekly Custom",
+      excludeStats: "Exclude from stats"
     },
     settings: {
       title: "Settings",
@@ -245,16 +254,16 @@ const I18N = {
     nav: { home: "首页", stats: "统计", tasks: "任务", settings: "设置" },
     home: {
       title: "今天",
-      next: "接下来",
-      todo: "时间线待办",
+      next: "Up Next",
+      todo: "To-Do",
       overdue: "已过期",
       todayGroup: "今天",
-      flexible: "灵活任务",
+      flexible: "No Time",
       completed: "已完成",
-      emptyNext: "先添加任务，决定今天会变成什么颜色。",
-      emptyToday: "今天还没有安排具体时间的任务。",
+      emptyNext: "还没有任务。",
+      emptyToday: "今天还没有具体时间任务。",
       emptyFlexible: "没有无时间任务",
-      emptyCompleted: "已完成的任务会收在这里。",
+      emptyCompleted: "还没有已完成任务。",
       idleTitle: "还没有正在进行的任务",
       running: "正在进行",
       paused: "已暂停",
@@ -338,14 +347,23 @@ const I18N = {
       taskName: "任务",
       defaultDuration: "默认时长（可选）",
       empty: "还没有任务结构，先加一个。",
-      newItem: "新建项目",
-      editItem: "编辑项目",
+      newItem: "新建任务",
+      editItem: "编辑任务",
       taskOptions: "任务选项",
       time: "时长",
       addCategory: "添加分类",
       addTask: "添加任务",
       addItem: "添加",
-      noPath: "还没有选择分类"
+      noPath: "还没有选择分类",
+      plannedTime: "计划时间（可选）",
+      moreSettings: "更多设置",
+      hideSettings: "收起设置",
+      repeat: "循环",
+      repeatNone: "无",
+      repeatDaily: "每天",
+      repeatWeekdays: "工作日",
+      repeatWeekly: "自定义每周",
+      excludeStats: "不计入统计"
     },
     settings: {
       title: "设置",
@@ -358,16 +376,16 @@ const I18N = {
     nav: { home: "首頁", stats: "統計", tasks: "任務", settings: "設定" },
     home: {
       title: "今天",
-      next: "接下來",
-      todo: "時間線待辦",
+      next: "Up Next",
+      todo: "To-Do",
       overdue: "已過期",
       todayGroup: "今天",
-      flexible: "彈性任務",
+      flexible: "No Time",
       completed: "已完成",
-      emptyNext: "先新增任務，決定今天會變成什麼顏色。",
-      emptyToday: "今天還沒有安排具體時間的任務。",
+      emptyNext: "還沒有任務。",
+      emptyToday: "今天還沒有具體時間任務。",
       emptyFlexible: "沒有無時間任務",
-      emptyCompleted: "已完成的任務會收在這裡。",
+      emptyCompleted: "還沒有已完成任務。",
       idleTitle: "還沒有正在進行的任務",
       running: "進行中",
       paused: "已暫停",
@@ -451,14 +469,23 @@ const I18N = {
       taskName: "任務",
       defaultDuration: "預設時長（可選）",
       empty: "還沒有任務結構，先新增一個。",
-      newItem: "新增項目",
-      editItem: "編輯項目",
+      newItem: "新增任務",
+      editItem: "編輯任務",
       taskOptions: "任務選項",
       time: "時長",
       addCategory: "新增分類",
       addTask: "新增任務",
       addItem: "新增",
-      noPath: "還沒有選擇分類"
+      noPath: "還沒有選擇分類",
+      plannedTime: "計畫時間（可選）",
+      moreSettings: "更多設定",
+      hideSettings: "收起設定",
+      repeat: "循環",
+      repeatNone: "無",
+      repeatDaily: "每天",
+      repeatWeekdays: "工作日",
+      repeatWeekly: "自訂每週",
+      excludeStats: "不計入統計"
     },
     settings: {
       title: "設定",
@@ -485,6 +512,8 @@ const ui = {
   categoryCategory: "",
   returnSheetId: "create-sheet",
   createSheetExpanded: false,
+  templateSheetExpanded: false,
+  templateMoreSettings: false,
   taskEditMode: false,
   focusTaskId: "",
   focusCategoryKey: "",
@@ -532,6 +561,8 @@ const refs = {
   logForm: document.querySelector("#log-form"),
   startForm: document.querySelector("#start-form"),
   templateForm: document.querySelector("#template-form"),
+  templateSheetPanel: document.querySelector("#template-sheet-panel"),
+  templateSheetHandle: document.querySelector("#template-sheet-handle"),
   createColorPicker: document.querySelector("#create-color-picker"),
   createCategoryValue: document.querySelector("#create-category-value"),
   logCategoryValue: document.querySelector("#log-category-value"),
@@ -547,6 +578,10 @@ const refs = {
   templateColorPicker: document.querySelector("#template-color-picker"),
   templateSheetKicker: document.querySelector("#template-sheet-kicker"),
   templateSheetTitle: document.querySelector("#template-sheet-title"),
+  templateMoreToggle: document.querySelector("#template-more-toggle"),
+  templateMoreSettings: document.querySelector("#template-more-settings"),
+  templateRepeatButtons: document.querySelectorAll("[data-template-repeat]"),
+  templateWeekdayButtons: document.querySelectorAll("[data-repeat-day]"),
   homeTaskSheetTitle: document.querySelector("#home-task-sheet-title"),
   homeTaskEditButton: document.querySelector("#home-task-edit-button"),
   homeTaskCategoryButton: document.querySelector("#home-task-category-button"),
@@ -607,6 +642,14 @@ function bindEvents() {
   on(refs.startForm, "submit", handleStartSubmit);
   on(refs.templateForm, "submit", handleTemplateSubmit);
   on(refs.templateColorPicker, "click", handleTemplateColorClick);
+  on(refs.templateSheetHandle, "click", () => setTemplateSheetExpanded(!ui.templateSheetExpanded));
+  on(refs.templateMoreToggle, "click", toggleTemplateMoreSettings);
+  refs.templateRepeatButtons.forEach((button) => {
+    button.addEventListener("click", () => setTemplateRepeatType(button.dataset.templateRepeat));
+  });
+  refs.templateWeekdayButtons.forEach((button) => {
+    button.addEventListener("click", () => toggleTemplateRepeatDay(Number(button.dataset.repeatDay)));
+  });
   on(refs.createSheetHandle, "click", () => setCreateSheetExpanded(!ui.createSheetExpanded));
   on(refs.createSheetHandle, "pointerdown", handleCreateSheetDragStart);
   on(refs.createForm, "focusin", () => setCreateSheetExpanded(true));
@@ -655,19 +698,17 @@ function bindEvents() {
 
   on(refs.statsDetailList, "click", handleStatsDetailClick);
   on(refs.statsDonut, "click", handleStatsDonutClick);
-  on(refs.statsDayStrip, "click", handleStatsDayPick);
-
   refs.statsStartDate.addEventListener("change", () => {
     ui.statsPreset = "custom";
     ui.statsStart = refs.statsStartDate.value;
-    syncStatsFocusDate();
+    ui.statsClockEntryId = "";
     renderStats();
   });
 
   refs.statsEndDate.addEventListener("change", () => {
     ui.statsPreset = "custom";
     ui.statsEnd = refs.statsEndDate.value;
-    syncStatsFocusDate();
+    ui.statsClockEntryId = "";
     renderStats();
   });
 
@@ -726,9 +767,26 @@ function normalizeTasks(tasks) {
     category: repairKnownText(String(task.category || task.group || "未分类")),
     action: repairKnownText(String(task.action || task.title || "未命名")),
     color: String(task.color || "#AFC7FF"),
+    defaultStartTime: /^\d{2}:\d{2}$/.test(String(task.defaultStartTime || task.startTime || "")) ? String(task.defaultStartTime || task.startTime || "") : "",
     defaultDurationMinutes: parseMinutes(task.defaultDurationMinutes),
+    repeatType: normalizeRepeatType(task.repeatType || task.repeat || "none"),
+    repeatDays: normalizeRepeatDays(task.repeatDays),
+    excludeFromStats: Boolean(task.excludeFromStats),
     createdAt: task.createdAt || new Date().toISOString()
   }));
+}
+
+function normalizeRepeatType(value) {
+  return ["none", "daily", "weekdays", "weekly"].includes(String(value || ""))
+    ? String(value)
+    : "none";
+}
+
+function normalizeRepeatDays(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return [...new Set(value.map((item) => Number(item)).filter((item) => Number.isInteger(item) && item >= 0 && item <= 6))].sort((a, b) => a - b);
 }
 
 function normalizePlans(plans) {
@@ -832,7 +890,7 @@ function ensureStarterData() {
 
   state.plans.push(
     createPlan({
-      title: "璇枃闃呰",
+      title: "语文阅读",
       taskId: state.tasks.find((task) => task.id === "task_chinese_read")?.id || "",
       date: today,
       startTime: overdueTime,
@@ -840,7 +898,7 @@ function ensureStarterData() {
       important: false
     }),
     createPlan({
-      title: "鏁板鍋氶",
+      title: "数学做题",
       taskId: state.tasks.find((task) => task.id === "task_math_practice")?.id || "",
       date: today,
       startTime: soonTime,
@@ -848,7 +906,7 @@ function ensureStarterData() {
       important: false
     }),
     createPlan({
-      title: "鏁板澶嶄範",
+      title: "数学复习",
       taskId: state.tasks.find((task) => task.id === "task_math_review")?.id || "",
       date: today,
       startTime: laterTime,
@@ -856,7 +914,7 @@ function ensureStarterData() {
       important: true
     }),
     createPlan({
-      title: "濉啓闂嵎",
+      title: "填写问卷",
       taskId: "",
       date: today,
       startTime: "",
@@ -868,6 +926,37 @@ function ensureStarterData() {
   saveState();
 }
 
+function materializeRecurringPlansForToday() {
+  const today = dateKey(new Date());
+  const weekday = new Date().getDay();
+  let changed = false;
+
+  state.tasks.forEach((task) => {
+    if (!shouldScheduleTemplateForDay(task, weekday)) {
+      return;
+    }
+    const hasPlan = state.plans.some((plan) => plan.date === today && plan.taskId === task.id);
+    if (hasPlan) {
+      return;
+    }
+    state.plans.push(createPlan({
+      title: task.action,
+      taskId: task.id,
+      date: today,
+      startTime: task.defaultStartTime || "",
+      durationMinutes: task.defaultDurationMinutes,
+      important: false,
+      color: getCategoryColor(task.folder, task.category)
+    }));
+    changed = true;
+  });
+
+  if (changed) {
+    state.plans.sort(comparePlans);
+    saveState();
+  }
+}
+
 function saveState() {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
@@ -875,7 +964,8 @@ function saveState() {
 function renderAll() {
   applyTheme(getTheme());
   applyTranslations();
-  syncStatsFocusDate();
+  materializeRecurringPlansForToday();
+  syncTemplateMoreSettingsUI();
   renderTodayLabel();
   renderSuggestionList();
   renderFocusTimer();
@@ -968,14 +1058,11 @@ function renderFocusTimer() {
       <div class="timer-row primary">
         <div class="timer-inline-copy">
           <span class="timer-kicker">${t("home.running")}</span>
-          <span class="timer-title">${t("home.idleTitle")}</span>
+          <span class="timer-title timer-title-empty" aria-hidden="true"></span>
         </div>
-        <div class="timer-clock">00:00:00</div>
-        <div class="timer-actions">
-          <button class="timer-button" type="button" data-open-sheet="quick-sheet">${t("home.start")}</button>
-        </div>
+        <div class="timer-clock">00:00</div>
       </div>
-      <div class="timer-progress" style="--progress:0.24"></div>
+      <div class="timer-progress" style="--progress:0.22"></div>
     `;
     return;
   }
@@ -1055,23 +1142,25 @@ function renderTodoList(items, group) {
 function renderNextCard(plan) {
   const status = getPlanStatus(plan);
   const task = plan.taskId ? findTask(plan.taskId) : null;
-  const timeLabel = plan.startTime || "";
   const tag = shortTag(plan);
-  const extra = plan.important ? `<span class="status-chip">${t("home.important")}</span>` : "";
   const actionLabel = isPlanRunning(plan) ? t("home.resume") : t("home.start");
   const color = getItemColor(plan);
   const title = task ? task.action : plan.title;
+  const duration = planDurationMinutes(plan);
+  const topLabel = plan.startTime || t("home.flexible");
+  const sideLabel = duration ? `${duration} min` : "";
 
   return `
     <article class="next-card status-${status}" data-home-plan="${plan.id}" style="${buildNextCardStyle(color)}">
       <div class="next-topline">
-        <span class="next-time ${timeLabel ? "" : "is-empty"}">${escapeHtml(timeLabel || " ")}</span>
-        ${extra}
+        <span class="next-time">${escapeHtml(topLabel)}</span>
+        ${sideLabel ? `<span class="next-side">${escapeHtml(sideLabel)}</span>` : ""}
       </div>
-      <div>
+      <div class="next-copy">
         <p class="next-title">${escapeHtml(title)}</p>
-        <div class="todo-meta">
+        <div class="next-meta">
           ${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}
+          ${plan.important ? `<span class="status-chip">${t("home.important")}</span>` : ""}
         </div>
       </div>
       <div class="next-actions">
@@ -1084,19 +1173,21 @@ function renderNextCard(plan) {
 
 function renderTodoRow(plan, group) {
   const running = isPlanRunning(plan);
-  const timeLabel = group === "flexible" ? "" : (plan.startTime || "");
   const tag = shortTag(plan);
   const duration = planDurationMinutes(plan);
   const task = plan.taskId ? findTask(plan.taskId) : null;
   const title = task ? task.action : plan.title;
-  const statusLabel = duration ? `${duration} min` : "";
+  const lead = group === "flexible"
+    ? title
+    : [plan.startTime || "", title].filter(Boolean).join("  ");
+  const sideLabel = duration ? `${duration} min` : "";
+  const actionLabel = running ? t("home.resume") : t("home.start");
 
   return `
     <article class="todo-row ${group === "overdue" ? "is-overdue" : ""} ${running ? "is-running" : ""}" data-home-plan="${plan.id}">
       <div class="todo-main">
-        <span class="todo-time ${timeLabel ? "" : "is-empty"}">${escapeHtml(timeLabel || " ")}</span>
-        <div>
-          <p class="todo-title">${escapeHtml(title)}</p>
+        <div class="todo-copy">
+          <p class="todo-title">${escapeHtml(lead)}</p>
           <div class="todo-meta">
             ${tag ? `<span class="tag">${escapeHtml(tag)}</span>` : ""}
             ${plan.important ? `<span class="status-chip">${t("home.important")}</span>` : ""}
@@ -1104,13 +1195,10 @@ function renderTodoRow(plan, group) {
         </div>
       </div>
       <div class="todo-trailing">
-        ${statusLabel ? `<span class="task-meta">${escapeHtml(statusLabel)}</span>` : ""}
-        <div class="todo-actions">
-          <button class="inline-button ${group === "overdue" ? "warning" : "primary"}" type="button" data-start-plan="${plan.id}">
-            ${running ? t("home.running") : t("home.start")}
-          </button>
-          <button class="inline-button soft" type="button" data-complete-plan="${plan.id}">${t("home.done")}</button>
-        </div>
+        ${sideLabel ? `<span class="todo-side">${escapeHtml(sideLabel)}</span>` : `<span class="todo-side is-empty"></span>`}
+        <button class="inline-button ${group === "overdue" ? "warning" : "soft"} compact" type="button" data-start-plan="${plan.id}">
+          ${actionLabel}
+        </button>
       </div>
     </article>
   `;
@@ -1216,10 +1304,21 @@ function renderTaskTemplateRow(task) {
           <button class="row-action" type="button" data-task-edit="${task.id}">${t("common.edit")}</button>
           <button class="row-action" type="button" data-task-duration="${task.id}">${t("tasks.time")}</button>
           <button class="row-action danger" type="button" data-task-delete="${task.id}">${t("common.delete")}</button>
-        ` : `${task.defaultDurationMinutes ? `<span class="template-duration">${task.defaultDurationMinutes} min</span>` : ""}`}
+        ` : `${renderTemplateMeta(task)}`}
       </div>
     </div>
   `;
+}
+
+function renderTemplateMeta(task) {
+  const parts = [];
+  if (task.defaultStartTime) {
+    parts.push(task.defaultStartTime);
+  }
+  if (task.defaultDurationMinutes) {
+    parts.push(`${task.defaultDurationMinutes} min`);
+  }
+  return parts.length ? `<span class="template-duration">${escapeHtml(parts.join(" · "))}</span>` : "";
 }
 
 function buildStatsRows(entries) {
@@ -1301,106 +1400,46 @@ function renderStats() {
   refs.statsCustomRange.classList.toggle("hidden", ui.statsPreset !== "custom");
   refs.statsStartDate.value = ui.statsStart;
   refs.statsEndDate.value = ui.statsEnd;
-
-  syncStatsFocusDate();
-  renderStatsDayStrip();
+  refs.statsDayStrip.classList.add("hidden");
+  refs.statsDayStrip.innerHTML = "";
 
   const entries = getEntriesWithinRange(ui.statsStart, ui.statsEnd);
   populateStatsFilters(entries);
+  const filteredEntries = filterEntriesForStats(entries);
   const rows = buildStatsRows(entries);
   const totalMinutes = rows.reduce((sum, row) => sum + row.minutes, 0);
-  const focusEntries = entries.filter((entry) => dateKey(entry.start) === ui.statsFocusDate);
-  const focusMinutes = focusEntries.reduce((sum, entry) => sum + entryDurationMinutes(entry), 0);
 
-  refs.statsTotalDuration.textContent = formatStatsDuration(focusMinutes);
+  refs.statsTotalDuration.textContent = formatStatsDuration(totalMinutes);
   refs.statsTotalLabel.textContent = ui.statsPreset === "day"
     ? t("stats.trackedToday")
-    : t("stats.selectedDay", { date: formatStatsFocusDate(ui.statsFocusDate) });
+    : ui.statsPreset === "week"
+      ? t("stats.trackedWeek")
+      : ui.statsPreset === "month"
+        ? t("stats.trackedMonth")
+        : t("stats.trackedRange");
 
-  renderStatsDonut(focusEntries);
+  renderStatsDonut(ui.statsPreset === "day" ? filteredEntries : rows);
   renderStatsDetails(rows, totalMinutes);
   renderStatsTrend(entries);
 }
 
-function renderStatsDayStrip() {
-  const days = getStatsDays();
-  const hidden = ui.statsPreset === "day" || days.length <= 1;
-  refs.statsDayStrip.classList.toggle("hidden", hidden);
-  if (hidden) {
-    refs.statsDayStrip.innerHTML = "";
-    return;
-  }
-
-  refs.statsDayStrip.innerHTML = days.map((day) => {
-    const date = new Date(`${day}T12:00:00`);
-    const dayLabel = currentLanguage() === "en"
-      ? new Intl.DateTimeFormat(localeTag(), { month: "short", day: "numeric" }).format(date)
-      : new Intl.DateTimeFormat(localeTag(), { month: "numeric", day: "numeric" }).format(date);
-    return `
-      <button class="stats-day-button ${day === ui.statsFocusDate ? "active" : ""}" type="button" data-stats-day="${day}">
-        <strong>${escapeHtml(dayLabel)}</strong>
-        <span>${escapeHtml(shortWeekday(date))}</span>
-      </button>
-    `;
-  }).join("");
-}
-
-function handleStatsDayPick(event) {
-  const button = event.target.closest("[data-stats-day]");
-  if (!button) {
-    return;
-  }
-  ui.statsFocusDate = button.dataset.statsDay;
-  ui.statsClockEntryId = "";
-  renderStats();
-}
-
-function renderStatsDonut(entries) {
-  const circumference = 2 * Math.PI * 90;
+function renderStatsDonut(data) {
   const center = 130;
-  const markers = [0, 6, 12, 18].map((hour) => {
-    const angle = ((hour / 24) * 360) - 90;
-    const radians = (angle * Math.PI) / 180;
-    const x = center + Math.cos(radians) * 110;
-    const y = center + Math.sin(radians) * 110 + 6;
-    return `<text class="stats-clock-marker" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${String(hour).padStart(2, "0")}</text>`;
-  }).join("");
+  const radius = 102;
+  const isDayClock = ui.statsPreset === "day";
+  const markers = isDayClock ? buildClockMarkers(center, radius + 20) : "";
+  const base = `<circle class="stats-pie-base ${isDayClock ? "clock-base" : ""}" cx="${center}" cy="${center}" r="${radius}"></circle>`;
+  const segments = isDayClock
+    ? buildDayClockSegments(data, center, radius)
+    : buildAggregatePieSegments(data, center, radius);
 
-  const segments = entries.map((entry) => {
-    const start = timeToMinutes(formatTime(entry.start));
-    const end = timeToMinutes(formatTime(entry.end));
-    const minutes = Math.max(end - start, 1);
-    const offset = circumference * (start / 1440);
-    const length = circumference * (minutes / 1440);
-    const isActive = ui.statsClockEntryId === entry.id;
-    const muted = ui.statsClockEntryId && !isActive;
-    const midAngle = -90 + ((start + minutes / 2) / 1440) * 360;
-    return `
-      <circle
-        class="stats-segment ${isActive ? "is-active" : ""} ${muted ? "is-muted" : ""}"
-        cx="${center}"
-        cy="${center}"
-        r="90"
-        stroke="${getItemColor(entry)}"
-        data-entry-id="${escapeAttr(entry.id)}"
-        data-mid-angle="${midAngle.toFixed(2)}"
-        stroke-dasharray="${length} ${circumference}"
-        stroke-dashoffset="${-offset}"
-      ></circle>
-    `;
-  }).join("");
+  refs.statsDonut.innerHTML = `${base}${segments}${markers}`;
 
-  refs.statsDonut.innerHTML = `
-    <g transform="rotate(-90 130 130)">
-      <circle class="stats-track clock-track" cx="130" cy="130" r="90"></circle>
-      ${segments}
-    </g>
-    ${markers}
-  `;
-
-  const activeEntry = entries.find((entry) => entry.id === ui.statsClockEntryId);
-  const activeSegment = activeEntry ? refs.statsDonut.querySelector(`[data-entry-id="${escapeSelector(ui.statsClockEntryId)}"]`) : null;
-  if (!activeEntry || !activeSegment) {
+  const activeSegment = ui.statsClockEntryId
+    ? refs.statsDonut.querySelector(`[data-segment-key="${escapeSelector(ui.statsClockEntryId)}"]`)
+    : null;
+  if (!activeSegment) {
+    ui.statsClockEntryId = "";
     refs.statsCallout.classList.add("hidden");
     refs.statsCallout.innerHTML = "";
     refs.statsCallout.style.left = "";
@@ -1410,18 +1449,128 @@ function renderStatsDonut(entries) {
 
   const angle = Number(activeSegment.dataset.midAngle || 0);
   const radians = (angle * Math.PI) / 180;
-  const radius = 118;
-  const left = clamp(((center + Math.cos(radians) * radius) / 260) * 100, 14, 86);
-  const top = clamp(((center + Math.sin(radians) * radius) / 260) * 100, 14, 86);
-  const title = activeEntry.taskId ? (findTask(activeEntry.taskId)?.action || activeEntry.title) : activeEntry.title;
+  const labelRadius = radius + 28;
+  const left = clamp(((center + Math.cos(radians) * labelRadius) / 260) * 100, 12, 88);
+  const top = clamp(((center + Math.sin(radians) * labelRadius) / 260) * 100, 12, 88);
 
   refs.statsCallout.classList.remove("hidden");
   refs.statsCallout.style.left = `${left}%`;
   refs.statsCallout.style.top = `${top}%`;
   refs.statsCallout.innerHTML = `
-    <strong>${escapeHtml(title)}</strong>
-    <span>${escapeHtml(`${formatTime(activeEntry.start)} - ${formatTime(activeEntry.end)}`)}</span>
+    <strong>${escapeHtml(activeSegment.dataset.calloutTitle || "")}</strong>
+    <span>${escapeHtml(activeSegment.dataset.calloutCopy || "")}</span>
   `;
+}
+
+function buildClockMarkers(center, radius) {
+  return [0, 6, 12, 18].map((hour) => {
+    const angle = ((hour / 24) * 360) - 90;
+    const radians = (angle * Math.PI) / 180;
+    const x = center + Math.cos(radians) * radius;
+    const y = center + Math.sin(radians) * radius + 6;
+    return `<text class="stats-clock-marker" x="${x.toFixed(1)}" y="${y.toFixed(1)}">${String(hour).padStart(2, "0")}</text>`;
+  }).join("");
+}
+
+function buildDayClockSegments(entries, center, radius) {
+  const usableEntries = [...entries]
+    .map((entry) => {
+      const start = timeToMinutes(formatTime(entry.start));
+      const end = timeToMinutes(formatTime(entry.end));
+      const minutes = Math.max(end - start, 1);
+      return { entry, start, minutes };
+    })
+    .filter((item) => item.minutes > 0)
+    .sort((a, b) => a.start - b.start);
+
+  if (ui.statsClockEntryId && !usableEntries.some((item) => item.entry.id === ui.statsClockEntryId)) {
+    ui.statsClockEntryId = "";
+  }
+
+  return usableEntries.map(({ entry, start, minutes }) => {
+    const startAngle = -90 + (start / 1440) * 360;
+    const endAngle = -90 + ((start + minutes) / 1440) * 360;
+    const midAngle = startAngle + (((minutes / 1440) * 360) / 2);
+    const isActive = ui.statsClockEntryId === entry.id;
+    const muted = ui.statsClockEntryId && !isActive;
+    const title = entry.taskId ? (findTask(entry.taskId)?.action || entry.title) : entry.title;
+    const copy = `${formatTime(entry.start)} - ${formatTime(entry.end)}`;
+    return `
+      <path
+        class="stats-pie-segment ${isActive ? "is-active" : ""} ${muted ? "is-muted" : ""}"
+        fill="${getItemColor(entry)}"
+        d="${describePieSlice(center, center, radius, startAngle, endAngle)}"
+        data-segment-key="${escapeAttr(entry.id)}"
+        data-mid-angle="${midAngle.toFixed(2)}"
+        data-callout-title="${escapeAttr(title)}"
+        data-callout-copy="${escapeAttr(copy)}"
+      ></path>
+    `;
+  }).join("");
+}
+
+function buildAggregatePieSegments(rows, center, radius) {
+  const usableRows = rows.filter((row) => row.minutes > 0);
+  const totalMinutes = usableRows.reduce((sum, row) => sum + row.minutes, 0);
+  if (!totalMinutes) {
+    ui.statsClockEntryId = "";
+    return "";
+  }
+  if (ui.statsClockEntryId && !usableRows.some((row) => row.key === ui.statsClockEntryId)) {
+    ui.statsClockEntryId = "";
+  }
+
+  let offset = 0;
+  return usableRows.map((row) => {
+    const startAngle = -90 + (offset / totalMinutes) * 360;
+    offset += row.minutes;
+    const endAngle = -90 + (offset / totalMinutes) * 360;
+    const midAngle = (startAngle + endAngle) / 2;
+    const percent = Math.round((row.minutes / totalMinutes) * 100);
+    const isActive = ui.statsClockEntryId === row.key;
+    const muted = ui.statsClockEntryId && !isActive;
+    return `
+      <path
+        class="stats-pie-segment ${isActive ? "is-active" : ""} ${muted ? "is-muted" : ""}"
+        fill="${row.color}"
+        d="${describePieSlice(center, center, radius, startAngle, endAngle)}"
+        data-segment-key="${escapeAttr(row.key)}"
+        data-mid-angle="${midAngle.toFixed(2)}"
+        data-callout-title="${escapeAttr(row.label)}"
+        data-callout-copy="${escapeAttr(`${formatStatsDuration(row.minutes)} · ${percent}%`)}"
+      ></path>
+    `;
+  }).join("");
+}
+
+function describePieSlice(cx, cy, radius, startAngle, endAngle) {
+  const sweep = endAngle - startAngle;
+  if (Math.abs(sweep) >= 359.999) {
+    return [
+      `M ${cx} ${cy}`,
+      `m 0 ${-radius}`,
+      `a ${radius} ${radius} 0 1 1 0 ${radius * 2}`,
+      `a ${radius} ${radius} 0 1 1 0 ${-radius * 2}`,
+      "Z"
+    ].join(" ");
+  }
+  const start = polarToCartesian(cx, cy, radius, endAngle);
+  const end = polarToCartesian(cx, cy, radius, startAngle);
+  const largeArc = sweep > 180 ? 1 : 0;
+  return [
+    `M ${cx} ${cy}`,
+    `L ${start.x} ${start.y}`,
+    `A ${radius} ${radius} 0 ${largeArc} 0 ${end.x} ${end.y}`,
+    "Z"
+  ].join(" ");
+}
+
+function polarToCartesian(cx, cy, radius, angle) {
+  const radians = (angle * Math.PI) / 180;
+  return {
+    x: +(cx + Math.cos(radians) * radius).toFixed(2),
+    y: +(cy + Math.sin(radians) * radius).toFixed(2)
+  };
 }
 
 function renderStatsDetails(rows, totalMinutes) {
@@ -1542,6 +1691,9 @@ function filterEntriesForStats(entries) {
   const taskFilter = refs.statsTaskFilter.value || "all";
   return entries.filter((entry) => {
     const meta = getEntryStatsMeta(entry);
+    if (meta.excludeFromStats) {
+      return false;
+    }
     const categoryMatch = categoryFilter === "all" || meta.categoryKey === categoryFilter;
     const taskMatch = taskFilter === "all" || meta.taskKey === taskFilter;
     return categoryMatch && taskMatch;
@@ -1557,7 +1709,8 @@ function getEntryStatsMeta(entry) {
       taskLabel: task.action,
       categoryKey: buildCategoryKey(task.folder, task.category),
       taskKey: `task:${task.id}`,
-      color: getCategoryColor(task.folder, task.category)
+      color: getCategoryColor(task.folder, task.category),
+      excludeFromStats: Boolean(task.excludeFromStats)
     };
   }
 
@@ -1567,7 +1720,8 @@ function getEntryStatsMeta(entry) {
     taskLabel: entry.title || t("stats.untitled"),
     categoryKey: "category:none",
     taskKey: `temp:${entry.title || entry.id}`,
-    color: entry.color || getTaskPaletteColors()[0] || "#AFC7FF"
+    color: entry.color || getTaskPaletteColors()[0] || "#AFC7FF",
+    excludeFromStats: false
   };
 }
 function switchView(view, quiet = false) {
@@ -1622,6 +1776,9 @@ function openSheet(id) {
   if (id === "create-sheet") {
     window.setTimeout(() => setCreateSheetExpanded(false), 0);
   }
+  if (id === "template-sheet") {
+    window.setTimeout(() => setTemplateSheetExpanded(ui.templateMoreSettings), 0);
+  }
 }
 
 function closeSheet(id) {
@@ -1631,6 +1788,9 @@ function closeSheet(id) {
   }
   if (id === "create-sheet") {
     setCreateSheetExpanded(false);
+  }
+  if (id === "template-sheet") {
+    setTemplateSheetExpanded(false);
   }
 }
 
@@ -1964,12 +2124,18 @@ function openTemplateForm(taskId = "", preset = {}) {
   refs.templateForm.elements.templateId.value = "";
   refs.templateSheetKicker.textContent = t("tasks.newItem");
   refs.templateSheetTitle.textContent = t("tasks.editItem");
+  ui.templateMoreSettings = false;
   const defaultColor = getTaskPaletteColors()[0] || "#AFC7FF";
   refs.templateForm.dataset.selectedColor = defaultColor;
+  refs.templateForm.dataset.repeatType = "none";
+  refs.templateForm.dataset.repeatDays = "";
   renderTemplateColorPicker(defaultColor);
   refs.templateForm.elements.folder.value = preset.folder || "";
   refs.templateForm.elements.category.value = preset.category || "";
   refs.templateForm.elements.action.value = preset.action || "";
+  refs.templateForm.elements.defaultStartTime.value = preset.defaultStartTime || "";
+  refs.templateForm.elements.defaultDurationMinutes.value = preset.defaultDurationMinutes || "";
+  refs.templateForm.elements.excludeFromStats.checked = Boolean(preset.excludeFromStats);
 
   if (taskId) {
     const task = findTask(taskId);
@@ -1982,12 +2148,19 @@ function openTemplateForm(taskId = "", preset = {}) {
     refs.templateForm.elements.folder.value = task.folder;
     refs.templateForm.elements.category.value = task.category;
     refs.templateForm.elements.action.value = task.action;
+    refs.templateForm.elements.defaultStartTime.value = task.defaultStartTime || "";
     refs.templateForm.elements.defaultDurationMinutes.value = task.defaultDurationMinutes || "";
+    refs.templateForm.elements.excludeFromStats.checked = Boolean(task.excludeFromStats);
     const categoryColor = getCategoryColor(task.folder, task.category);
     refs.templateForm.dataset.selectedColor = categoryColor;
+    refs.templateForm.dataset.repeatType = task.repeatType || "none";
+    refs.templateForm.dataset.repeatDays = (task.repeatDays || []).join(",");
     renderTemplateColorPicker(categoryColor);
+    ui.templateMoreSettings = Boolean(task.defaultStartTime || task.repeatType !== "none" || task.excludeFromStats);
   }
 
+  syncTemplateMoreSettingsUI();
+  setTemplateSheetExpanded(ui.templateMoreSettings);
   openSheet("template-sheet");
 }
 
@@ -2006,6 +2179,98 @@ function handleTemplateColorClick(event) {
   renderTemplateColorPicker(button.dataset.templateColor);
 }
 
+function setTemplateSheetExpanded(expanded) {
+  ui.templateSheetExpanded = Boolean(expanded);
+  refs.templateSheetPanel?.classList.toggle("expanded", ui.templateSheetExpanded);
+}
+
+function toggleTemplateMoreSettings() {
+  ui.templateMoreSettings = !ui.templateMoreSettings;
+  syncTemplateMoreSettingsUI();
+  if (ui.templateMoreSettings) {
+    setTemplateSheetExpanded(true);
+  }
+}
+
+function setTemplateRepeatType(type) {
+  refs.templateForm.dataset.repeatType = normalizeRepeatType(type);
+  if (refs.templateForm.dataset.repeatType !== "weekly") {
+    refs.templateForm.dataset.repeatDays = "";
+  }
+  syncTemplateMoreSettingsUI();
+}
+
+function toggleTemplateRepeatDay(day) {
+  const current = normalizeRepeatDays(
+    String(refs.templateForm.dataset.repeatDays || "")
+      .split(",")
+      .filter(Boolean)
+      .map(Number)
+  );
+  const next = current.includes(day)
+    ? current.filter((item) => item !== day)
+    : [...current, day].sort((a, b) => a - b);
+  refs.templateForm.dataset.repeatDays = next.join(",");
+  syncTemplateMoreSettingsUI();
+}
+
+function syncTemplateMoreSettingsUI() {
+  const repeatType = normalizeRepeatType(refs.templateForm.dataset.repeatType || "none");
+  const repeatDays = normalizeRepeatDays(
+    String(refs.templateForm.dataset.repeatDays || "")
+      .split(",")
+      .filter(Boolean)
+      .map(Number)
+  );
+  const moreLabel = refs.templateMoreToggle?.querySelector("[data-more-settings-label]");
+  const moreSummary = refs.templateMoreToggle?.querySelector("[data-more-settings-summary]");
+  const weekdayWrap = refs.templateMoreSettings?.querySelector(".weekday-picker");
+  const repeatInput = refs.templateForm.elements.repeatType;
+  const repeatDaysInput = refs.templateForm.elements.repeatDays;
+
+  if (repeatInput) {
+    repeatInput.value = repeatType;
+  }
+  if (repeatDaysInput) {
+    repeatDaysInput.value = repeatDays.join(",");
+  }
+
+  if (refs.templateMoreSettings) {
+    refs.templateMoreSettings.classList.toggle("hidden", !ui.templateMoreSettings);
+  }
+  if (moreLabel) {
+    moreLabel.textContent = ui.templateMoreSettings ? t("tasks.hideSettings") : t("tasks.moreSettings");
+  }
+  if (moreSummary) {
+    moreSummary.textContent = summarizeTemplateRepeat(repeatType, repeatDays);
+  }
+  refs.templateRepeatButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.templateRepeat === repeatType);
+  });
+  refs.templateWeekdayButtons.forEach((button) => {
+    const day = Number(button.dataset.repeatDay);
+    button.textContent = weekdayChipLabel(day);
+    button.classList.toggle("active", repeatDays.includes(day));
+  });
+  weekdayWrap?.classList.toggle("hidden", repeatType !== "weekly");
+}
+
+function summarizeTemplateRepeat(repeatType, repeatDays) {
+  if (repeatType === "daily") {
+    return t("tasks.repeatDaily");
+  }
+  if (repeatType === "weekdays") {
+    return t("tasks.repeatWeekdays");
+  }
+  if (repeatType === "weekly") {
+    if (!repeatDays.length) {
+      return t("tasks.repeatWeekly");
+    }
+    return repeatDays.map((day) => weekdayChipLabel(day)).join(" · ");
+  }
+  return t("tasks.repeatNone");
+}
+
 function handleTemplateSubmit(event) {
   event.preventDefault();
   const formData = new FormData(event.currentTarget);
@@ -2013,14 +2278,24 @@ function handleTemplateSubmit(event) {
   const folder = String(formData.get("folder") || "").trim();
   const category = String(formData.get("category") || "").trim();
   const action = String(formData.get("action") || "").trim();
+  const defaultStartTime = String(formData.get("defaultStartTime") || "").trim();
   const defaultDurationMinutes = parseMinutes(formData.get("defaultDurationMinutes"));
+  const repeatType = normalizeRepeatType(formData.get("repeatType"));
+  const repeatDays = repeatType === "weekly"
+    ? normalizeRepeatDays(String(formData.get("repeatDays") || "").split(",").filter(Boolean).map(Number))
+    : [];
+  const excludeFromStats = Boolean(formData.get("excludeFromStats"));
   const color = refs.templateForm.dataset.selectedColor || getTaskPaletteColors()[0] || "#AFC7FF";
   const payload = {
     folder,
     category,
     action,
     color,
-    defaultDurationMinutes
+    defaultStartTime: /^\d{2}:\d{2}$/.test(defaultStartTime) ? defaultStartTime : "",
+    defaultDurationMinutes,
+    repeatType,
+    repeatDays,
+    excludeFromStats
   };
 
   if (!payload.folder || !payload.category || !payload.action) {
@@ -2071,7 +2346,7 @@ function syncNextDots() {
   }
   const card = refs.nextTrack.querySelector(".next-card");
   const width = card?.offsetWidth || refs.nextTrack.clientWidth || 1;
-  const gap = 12;
+  const gap = 10;
   const index = Math.min(
     dots.length - 1,
     Math.max(0, Math.round(refs.nextTrack.scrollLeft / (width + gap)))
@@ -2207,13 +2482,13 @@ function handleStatsDetailClick(event) {
 }
 
 function handleStatsDonutClick(event) {
-  const segment = event.target.closest("[data-entry-id]");
+  const segment = event.target.closest("[data-segment-key]");
   if (!segment) {
     ui.statsClockEntryId = "";
     renderStats();
     return;
   }
-  const key = segment.dataset.entryId;
+  const key = segment.dataset.segmentKey;
   ui.statsClockEntryId = ui.statsClockEntryId === key ? "" : key;
   renderStats();
 }
@@ -2664,6 +2939,19 @@ function comparePlans(a, b) {
   return createdTime(a) - createdTime(b);
 }
 
+function shouldScheduleTemplateForDay(task, weekday) {
+  if (task.repeatType === "daily") {
+    return true;
+  }
+  if (task.repeatType === "weekdays") {
+    return weekday >= 1 && weekday <= 5;
+  }
+  if (task.repeatType === "weekly") {
+    return (task.repeatDays || []).includes(weekday);
+  }
+  return false;
+}
+
 function getEntriesWithinRange(startDate, endDate) {
   const persistedEntries = state.entries.filter((entry) => {
     const day = dateKey(entry.start);
@@ -2737,7 +3025,7 @@ function syncStatsDatesFromPreset(preset) {
     ui.statsStart = dateKey(today);
     ui.statsEnd = dateKey(today);
   }
-  syncStatsFocusDate();
+  ui.statsClockEntryId = "";
 }
 
 function formatStatsDuration(minutes) {
@@ -3079,17 +3367,39 @@ function formatDurationClock(milliseconds) {
   const hours = Math.floor(totalSeconds / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
+  if (!hours) {
+    return [minutes, seconds].map((unit) => String(unit).padStart(2, "0")).join(":");
+  }
   return [hours, minutes, seconds].map((unit) => String(unit).padStart(2, "0")).join(":");
 }
 
 function humanizeMinutes(minutes) {
   const value = Math.max(Math.round(minutes || 0), 0);
+  const language = currentLanguage();
   if (value < 60) {
-    return `${value}鍒嗛挓`;
+    if (language === "en") {
+      return `${value} min`;
+    }
+    return language === "zh-Hant" ? `${value}分鐘` : `${value}分钟`;
   }
   const hours = Math.floor(value / 60);
   const rest = value % 60;
-  return rest ? `${hours}灏忔椂 ${rest}鍒嗛挓` : `${hours}灏忔椂`;
+  if (language === "en") {
+    return rest ? `${hours}h ${rest}m` : `${hours}h`;
+  }
+  if (language === "zh-Hant") {
+    return rest ? `${hours}小時 ${rest}分鐘` : `${hours}小時`;
+  }
+  return rest ? `${hours}小时 ${rest}分钟` : `${hours}小时`;
+}
+
+function weekdayChipLabel(day) {
+  const labels = currentLanguage() === "en"
+    ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    : currentLanguage() === "zh-Hant"
+      ? ["日", "一", "二", "三", "四", "五", "六"]
+      : ["日", "一", "二", "三", "四", "五", "六"];
+  return labels[day] || "";
 }
 
 function weekdayLabel(date) {

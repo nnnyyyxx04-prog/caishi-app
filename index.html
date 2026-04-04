@@ -24,7 +24,7 @@
 
         <section class="panel next-panel">
           <div class="section-head simple">
-            <h2 data-i18n="home.next">Next</h2>
+            <h2 data-i18n="home.next">Up Next</h2>
           </div>
           <div class="next-track" id="next-track"></div>
           <div class="page-dots" id="next-dots"></div>
@@ -32,7 +32,7 @@
 
         <section class="panel todo-panel">
           <div class="section-head simple">
-            <h2 data-i18n="home.todo">To-Do List</h2>
+            <h2 data-i18n="home.todo">To-Do</h2>
           </div>
 
           <section class="todo-group hidden" id="overdue-group">
@@ -51,7 +51,7 @@
 
           <section class="todo-group">
             <div class="group-head">
-              <h3 data-i18n="home.flexible">Flexible</h3>
+              <h3 data-i18n="home.flexible">No Time</h3>
             </div>
             <div class="todo-list" id="flexible-list"></div>
           </section>
@@ -362,8 +362,8 @@
 
   <div class="sheet-layer hidden" id="template-sheet">
     <div class="sheet-scrim" data-close-sheet="template-sheet"></div>
-    <div class="sheet-panel form-panel compact-panel">
-      <div class="sheet-handle"></div>
+    <div class="sheet-panel form-panel compact-panel expandable-sheet" id="template-sheet-panel">
+      <button class="sheet-handle drag-handle" id="template-sheet-handle" type="button" aria-label="Expand task panel"></button>
       <div class="sheet-head minimal-head">
         <div>
           <p class="sheet-kicker" id="template-sheet-kicker">New Item</p>
@@ -390,6 +390,40 @@
           <span data-i18n="tasks.defaultDuration">Default Duration (optional)</span>
           <input name="defaultDurationMinutes" type="number" min="5" step="5" placeholder="30">
         </label>
+        <button class="select-row more-settings-toggle" id="template-more-toggle" type="button">
+          <span data-more-settings-label data-i18n="tasks.moreSettings">More Settings</span>
+          <strong data-more-settings-summary data-i18n="tasks.repeatNone">None</strong>
+        </button>
+        <div class="more-settings hidden" id="template-more-settings">
+          <input name="repeatType" type="hidden" value="none">
+          <input name="repeatDays" type="hidden" value="">
+          <label class="field-block inline-field">
+            <span data-i18n="tasks.plannedTime">Planned Time (optional)</span>
+            <input name="defaultStartTime" type="time">
+          </label>
+          <section class="field-block stacked-field repeat-field">
+            <span data-i18n="tasks.repeat">Repeat</span>
+            <div class="repeat-toggle-group">
+              <button class="mini-segment active" type="button" data-template-repeat="none" data-i18n="tasks.repeatNone">None</button>
+              <button class="mini-segment" type="button" data-template-repeat="daily" data-i18n="tasks.repeatDaily">Every Day</button>
+              <button class="mini-segment" type="button" data-template-repeat="weekdays" data-i18n="tasks.repeatWeekdays">Weekdays</button>
+              <button class="mini-segment" type="button" data-template-repeat="weekly" data-i18n="tasks.repeatWeekly">Weekly Custom</button>
+            </div>
+            <div class="weekday-picker hidden">
+              <button class="weekday-chip" type="button" data-repeat-day="1">Mon</button>
+              <button class="weekday-chip" type="button" data-repeat-day="2">Tue</button>
+              <button class="weekday-chip" type="button" data-repeat-day="3">Wed</button>
+              <button class="weekday-chip" type="button" data-repeat-day="4">Thu</button>
+              <button class="weekday-chip" type="button" data-repeat-day="5">Fri</button>
+              <button class="weekday-chip" type="button" data-repeat-day="6">Sat</button>
+              <button class="weekday-chip" type="button" data-repeat-day="0">Sun</button>
+            </div>
+          </section>
+          <label class="toggle-row">
+            <span data-i18n="tasks.excludeStats">Exclude from stats</span>
+            <input name="excludeFromStats" type="checkbox">
+          </label>
+        </div>
         <div class="field-block color-field">
           <span data-i18n="field.color">Color</span>
           <div class="palette-picker compact-picker" id="template-color-picker"></div>
